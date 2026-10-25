@@ -1,0 +1,123 @@
+{
+  "meme": "puertas",
+  "ruta": "/victima",
+  "imagen": "puertas.jpg",
+  "ancho": 640,
+  "alto": 357,
+  "nota": "x, y, ancho y fuente en % del ancho/alto de la imagen. 'ancla' indica qué borde de la etiqueta cae en (x, y): 'abajo' = borde inferior centrado, 'arriba' = borde superior centrado. 'fuente' es el tamaño de letra en % del ancho de la imagen.",
+  "etiquetas": [
+    {
+      "id": "puerta-1",
+      "rol": "victima",
+      "indice": 5,
+      "descripcion": "Puerta más lejana (ensangrentada). Quinta víctima más reciente.",
+      "x": 4.84,
+      "y": 35.9,
+      "ancla": "abajo",
+      "ancho": 8.5,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "nombre"
+      ]
+    },
+    {
+      "id": "puerta-2",
+      "rol": "victima",
+      "indice": 4,
+      "descripcion": "Segunda puerta (ensangrentada). Cuarta víctima más reciente.",
+      "x": 12.19,
+      "y": 31.1,
+      "ancla": "abajo",
+      "ancho": 10,
+      "fuente": 2.4,
+      "muestra": [
+        "bandera",
+        "nombre"
+      ]
+    },
+    {
+      "id": "puerta-3",
+      "rol": "victima",
+      "indice": 3,
+      "descripcion": "Tercera puerta (ensangrentada). Tercera víctima más reciente.",
+      "x": 24.38,
+      "y": 25.8,
+      "ancla": "abajo",
+      "ancho": 12.5,
+      "fuente": 2.6,
+      "muestra": [
+        "bandera",
+        "nombre"
+      ]
+    },
+    {
+      "id": "puerta-4",
+      "rol": "victima",
+      "indice": 2,
+      "descripcion": "Cuarta puerta (ensangrentada). Segunda víctima más reciente.",
+      "x": 38.28,
+      "y": 20.7,
+      "ancla": "abajo",
+      "ancho": 13.75,
+      "fuente": 3,
+      "muestra": [
+        "bandera",
+        "nombre"
+      ]
+    },
+    {
+      "id": "puerta-5",
+      "rol": "victima",
+      "indice": 1,
+      "descripcion": "Puerta abierta junto a la muerte. La última víctima. Va sobre la hoja de la puerta porque arriba no cabe.",
+      "x": 57.2,
+      "y": 22.4,
+      "ancla": "arriba",
+      "ancho": 14,
+      "fuente": 3.2,
+      "muestra": [
+        "bandera",
+        "nombre"
+      ]
+    },
+    {
+      "id": "puerta-6",
+      "rol": "proxima",
+      "descripcion": "Puerta donde toca la muerte. El país justo encima de Venezuela. Va sobre la puerta porque arriba no hay pared.",
+      "x": 90,
+      "y": 20.2,
+      "ancla": "arriba",
+      "ancho": 15,
+      "fuente": 3.4,
+      "muestra": [
+        "bandera",
+        "nombre",
+        "rotulo"
+      ],
+      "rotulo": [
+        "PRÓXIMA",
+        "VÍCTIMA"
+      ]
+    },
+    {
+      "id": "muerte",
+      "rol": "venezuela",
+      "descripcion": "Sobre la túnica de la muerte.",
+      "x": 76,
+      "y": 63.9,
+      "ancla": "arriba",
+      "ancho": 13,
+      "fuente": 2.4,
+      "muestra": [
+        "bandera",
+        "nombre"
+      ],
+      "nombreFijo": "VENEZUELA"
+    }
+  ],
+  "marca": {
+    "esquina": "abajo-derecha",
+    "descripcion": "Dirección del sitio en la descarga."
+  }
+}

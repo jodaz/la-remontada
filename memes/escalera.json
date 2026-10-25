@@ -1,0 +1,194 @@
+{
+  "meme": "escalera",
+  "ruta": "/ranking",
+  "imagen": "escalera.jpg",
+  "ancho": 777,
+  "alto": 1100,
+  "nota": "x, y, ancho y fuente en % del ancho/alto de la imagen. 'ancla': 'abajo' = borde inferior centrado en (x, y), justo encima de la cabeza; 'arriba' = borde superior centrado. Los 4 paneles de arriba no llevan etiquetas.",
+  "etiquetas": [
+    {
+      "id": "escalon-1",
+      "rol": "primero",
+      "descripcion": "Personaje rojo de arriba: el #1 del ranking.",
+      "x": 3.5,
+      "y": 57.1,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-2",
+      "rol": "arriba",
+      "indice": 9,
+      "descripcion": "9 puestos encima de Venezuela.",
+      "x": 10.81,
+      "y": 58.64,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-3",
+      "rol": "arriba",
+      "indice": 8,
+      "descripcion": "8 puestos encima.",
+      "x": 18.79,
+      "y": 60.45,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-4",
+      "rol": "arriba",
+      "indice": 7,
+      "descripcion": "7 puestos encima.",
+      "x": 26.51,
+      "y": 62.73,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-5",
+      "rol": "arriba",
+      "indice": 6,
+      "descripcion": "6 puestos encima.",
+      "x": 34.23,
+      "y": 64.55,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-6",
+      "rol": "arriba",
+      "indice": 5,
+      "descripcion": "5 puestos encima.",
+      "x": 41.96,
+      "y": 66.45,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-7",
+      "rol": "arriba",
+      "indice": 4,
+      "descripcion": "4 puestos encima.",
+      "x": 49.68,
+      "y": 68.64,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-8",
+      "rol": "arriba",
+      "indice": 3,
+      "descripcion": "3 puestos encima.",
+      "x": 57.66,
+      "y": 71.82,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-9",
+      "rol": "arriba",
+      "indice": 2,
+      "descripcion": "2 puestos encima.",
+      "x": 65.38,
+      "y": 74.27,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "escalon-10",
+      "rol": "arriba",
+      "indice": 1,
+      "descripcion": "El país justo encima de Venezuela (la próxima víctima).",
+      "x": 72.84,
+      "y": 76.73,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    },
+    {
+      "id": "celebra",
+      "rol": "venezuela",
+      "descripcion": "El que celebra con champaña. Va en la cara del escalón, debajo de sus pies, porque encima está la champaña.",
+      "x": 82.37,
+      "y": 91.6,
+      "ancla": "arriba",
+      "ancho": 24,
+      "fuente": 3.4,
+      "muestra": [
+        "bandera",
+        "puesto",
+        "nombre"
+      ],
+      "nombreFijo": "VENEZUELA"
+    },
+    {
+      "id": "escalon-12",
+      "rol": "abajo",
+      "indice": 1,
+      "descripcion": "El de abajo: la última víctima.",
+      "x": 89.58,
+      "y": 81.64,
+      "ancla": "abajo",
+      "ancho": 7,
+      "fuente": 2.1,
+      "muestra": [
+        "bandera",
+        "puesto"
+      ]
+    }
+  ],
+  "marca": {
+    "esquina": "abajo-izquierda",
+    "descripcion": "Abajo a la izquierda, porque abajo a la derecha va la etiqueta de Venezuela."
+  }
+}

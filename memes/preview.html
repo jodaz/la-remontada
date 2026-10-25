@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plantillas · La Remontada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@800&family=Martian+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/css/flag-icons.min.css">
+<link rel="stylesheet" href="../src/styles/tokens.css">
+<style>
+  body { margin: 0; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
+  .pagina { max-width: 760px; margin: 0 auto; display: grid; gap: 40px; }
+  header h1 { font-size: var(--t-40); margin: 0; }
+  header p { margin: 8px 0 0; color: var(--tinta-suave); max-width: 60ch; }
+  section { display: grid; gap: 16px; justify-items: start; }
+  section h2 { font-size: var(--t-28); margin: 0; }
+  .serie { font-size: 11px; color: var(--tinta-suave); letter-spacing: var(--guiado); }
+
+  /* El meme: imagen + etiquetas en % */
+  .marco-billete { width: 100%; box-sizing: border-box; }
+  .meme { position: relative; width: 100%; container-type: inline-size; line-height: 0; }
+  .meme img { display: block; width: 100%; height: auto; }
+  .etiqueta {
+    position: absolute;
+    display: flex; flex-direction: column; align-items: center; gap: 0.15em;
+    font-family: var(--f-meme);
+    font-size: calc(var(--fuente) * 1cqw);
+    line-height: 1;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    -webkit-text-stroke: 0.14em #000;
+    paint-order: stroke fill;
+  }
+  .etiqueta.abajo { transform: translate(-50%, -100%); }
+  .etiqueta.arriba { transform: translate(-50%, 0); }
+  .etiqueta .fi { font-size: 1.5em; box-shadow: 0 0 0 0.06em #000; }
+  .etiqueta .txt { white-space: nowrap; max-width: 100%; }
+  .etiqueta .rotulo-meme { font-size: 0.8em; color: #FFD84A; }
+  .etiqueta.grande .txt { font-size: 1em; }
+  .marca.abajo-izquierda { left: 1.2%; right: auto; }
+  .marca { position: absolute; right: 1.2%; bottom: 1.2%; font: 600 1.6cqw/1 var(--f-datos); color: rgba(255,255,255,.85); text-shadow: 0 0 3px #000, 0 0 1px #000; }
+
+  .acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+  .ayuda { font-size: var(--t-14); color: var(--tinta-suave); max-width: 60ch; margin: 0; }
+  label.toggle { font-size: var(--t-14); display: inline-flex; gap: 8px; align-items: center; }
+  .guias .etiqueta { outline: 1px dashed #ff2d55; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <header>
+    <div class="serie">Nº VE·072·2026-10 · DATOS DE EJEMPLO</div>
+    <h1>Plantillas de los memes</h1>
+    <p>Vista previa de <code>puertas.json</code> y <code>escalera.json</code> sobre las imágenes base, con países y puestos <strong>de ejemplo</strong>. En el sitio, estos valores salen de <code>data/pib.json</code>.</p>
+    <label class="toggle"><input type="checkbox" id="guias"> Mostrar el borde de cada etiqueta</label>
+  </header>
+
+  <section>
+    <h2>La muerte tocando puertas · /victima</h2>
+    <div class="marco-billete"><div class="meme" id="meme-puertas"><img src="../public/memes/puertas.jpg" alt="La muerte toca la puerta de la próxima víctima; las puertas anteriores están ensangrentadas"><span class="marca">laremontada.vanguarddevs.com</span></div></div>
+    <p class="letra-pequena">Pasamos a Omán en PIB total. En PIB por persona, Omán produce N veces más que Venezuela.</p>
+    <div class="acciones"><button class="boton-descarga" data-meme="puertas">Descargar meme</button></div>
+  </section>
+
+  <section>
+    <h2>La escalera de medallas · /ranking</h2>
+    <div class="marco-billete"><div class="meme" id="meme-escalera"><img src="../public/memes/escalera.jpg" alt="Un atleta celebra con champaña su medalla en un escalón muy bajo de una escalera llena de medallistas"><span class="marca">laremontada.vanguarddevs.com</span></div></div>
+    <p class="letra-pequena">Puesto 72 en PIB total, pero puesto 134 de 192 en PIB por persona.</p>
+    <div class="acciones"><button class="boton-descarga" data-meme="escalera">Descargar meme</button></div>
+  </section>
+
+  <p class="ayuda">La descarga usa html-to-image desde un CDN; si abres este archivo sin conexión, se verán las etiquetas pero la descarga no funcionará. Abre el archivo con un servidor local (por ejemplo <code>npx serve</code>) para que la imagen no bloquee la captura.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<script>
+const CONFIG = { puertas: {"meme": "puertas", "ruta": "/victima", "imagen": "puertas.jpg", "ancho": 640, "alto": 357, "nota": "x, y, ancho y fuente en % del ancho/alto de la imagen. 'ancla' indica qué borde de la etiqueta cae en (x, y): 'abajo' = borde inferior centrado, 'arriba' = borde superior centrado. 'fuente' es el tamaño de letra en % del ancho de la imagen.", "etiquetas": [{"id": "puerta-1", "rol": "victima", "indice": 5, "descripcion": "Puerta más lejana (ensangrentada). Quinta víctima más reciente.", "x": 4.84, "y": 35.9, "ancla": "abajo", "ancho": 8.5, "fuente": 2.1, "muestra": ["bandera", "nombre"]}, {"id": "puerta-2", "rol": "victima", "indice": 4, "descripcion": "Segunda puerta (ensangrentada). Cuarta víctima más reciente.", "x": 12.19, "y": 31.1, "ancla": "abajo", "ancho": 10, "fuente": 2.4, "muestra": ["bandera", "nombre"]}, {"id": "puerta-3", "rol": "victima", "indice": 3, "descripcion": "Tercera puerta (ensangrentada). Tercera víctima más reciente.", "x": 24.38, "y": 25.8, "ancla": "abajo", "ancho": 12.5, "fuente": 2.6, "muestra": ["bandera", "nombre"]}, {"id": "puerta-4", "rol": "victima", "indice": 2, "descripcion": "Cuarta puerta (ensangrentada). Segunda víctima más reciente.", "x": 38.28, "y": 20.7, "ancla": "abajo", "ancho": 13.75, "fuente": 3, "muestra": ["bandera", "nombre"]}, {"id": "puerta-5", "rol": "victima", "indice": 1, "descripcion": "Puerta abierta junto a la muerte. La última víctima. Va sobre la hoja de la puerta porque arriba no cabe.", "x": 57.2, "y": 22.4, "ancla": "arriba", "ancho": 14, "fuente": 3.2, "muestra": ["bandera", "nombre"]}, {"id": "puerta-6", "rol": "proxima", "descripcion": "Puerta donde toca la muerte. El país justo encima de Venezuela. Va sobre la puerta porque arriba no hay pared.", "x": 90, "y": 20.2, "ancla": "arriba", "ancho": 15, "fuente": 3.4, "muestra": ["bandera", "nombre", "rotulo"], "rotulo": ["PRÓXIMA", "VÍCTIMA"]}, {"id": "muerte", "rol": "venezuela", "descripcion": "Sobre la túnica de la muerte.", "x": 76, "y": 63.9, "ancla": "arriba", "ancho": 13, "fuente": 2.4, "muestra": ["bandera", "nombre"], "nombreFijo": "VENEZUELA"}], "marca": {"esquina": "abajo-derecha", "descripcion": "Dirección del sitio en la descarga."}}, escalera: {"meme": "escalera", "ruta": "/ranking", "imagen": "escalera.jpg", "ancho": 777, "alto": 1100, "nota": "x, y, ancho y fuente en % del ancho/alto de la imagen. 'ancla': 'abajo' = borde inferior centrado en (x, y), justo encima de la cabeza; 'arriba' = borde superior centrado. Los 4 paneles de arriba no llevan etiquetas.", "etiquetas": [{"id": "escalon-1", "rol": "primero", "descripcion": "Personaje rojo de arriba: el #1 del ranking.", "x": 3.5, "y": 57.1, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-2", "rol": "arriba", "indice": 9, "descripcion": "9 puestos encima de Venezuela.", "x": 10.81, "y": 58.64, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-3", "rol": "arriba", "indice": 8, "descripcion": "8 puestos encima.", "x": 18.79, "y": 60.45, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-4", "rol": "arriba", "indice": 7, "descripcion": "7 puestos encima.", "x": 26.51, "y": 62.73, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-5", "rol": "arriba", "indice": 6, "descripcion": "6 puestos encima.", "x": 34.23, "y": 64.55, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-6", "rol": "arriba", "indice": 5, "descripcion": "5 puestos encima.", "x": 41.96, "y": 66.45, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-7", "rol": "arriba", "indice": 4, "descripcion": "4 puestos encima.", "x": 49.68, "y": 68.64, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-8", "rol": "arriba", "indice": 3, "descripcion": "3 puestos encima.", "x": 57.66, "y": 71.82, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-9", "rol": "arriba", "indice": 2, "descripcion": "2 puestos encima.", "x": 65.38, "y": 74.27, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "escalon-10", "rol": "arriba", "indice": 1, "descripcion": "El país justo encima de Venezuela (la próxima víctima).", "x": 72.84, "y": 76.73, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}, {"id": "celebra", "rol": "venezuela", "descripcion": "El que celebra con champaña. Va en la cara del escalón, debajo de sus pies, porque encima está la champaña.", "x": 82.37, "y": 91.6, "ancla": "arriba", "ancho": 24, "fuente": 3.4, "muestra": ["bandera", "puesto", "nombre"], "nombreFijo": "VENEZUELA"}, {"id": "escalon-12", "rol": "abajo", "indice": 1, "descripcion": "El de abajo: la última víctima.", "x": 89.58, "y": 81.64, "ancla": "abajo", "ancho": 7, "fuente": 2.1, "muestra": ["bandera", "puesto"]}], "marca": {"esquina": "abajo-izquierda", "descripcion": "Abajo a la izquierda, porque abajo a la derecha va la etiqueta de Venezuela."}} };
+
+// Datos de ejemplo. En el sitio salen de los módulos ranking/victimas.
+const EJEMPLO = {
+  venezuela: { iso: 've', nombre: 'Venezuela', puesto: 72 },
+  puertas: {
+    victima: [
+      { iso: 'om', nombre: 'Omán' },        // indice 1: la última
+      { iso: 'cd', nombre: 'RD Congo' },
+      { iso: 'hr', nombre: 'Croacia' },
+      { iso: 'cr', nombre: 'Costa Rica' },
+      { iso: 'bg', nombre: 'Bulgaria' }     // indice 5
+    ],
+    proxima: { iso: 'gt', nombre: 'Guatemala' }
+  },
+  escalera: {
+    primero: { iso: 'us', puesto: 1 },
+    arriba: [ // indice 1 = justo encima (puesto 71) ... indice 9 = puesto 63
+      { iso: 'gt', puesto: 71 }, { iso: 'lk', puesto: 70 }, { iso: 'ke', puesto: 69 },
+      { iso: 'do', puesto: 68 }, { iso: 'et', puesto: 67 }, { iso: 'pr', puesto: 66 },
+      { iso: 'uz', puesto: 65 }, { iso: 'sk', puesto: 64 }, { iso: 'lu', puesto: 63 }
+    ],
+    abajo: [ { iso: 'om', puesto: 73 } ]
+  }
+};
+
+function datoPara(meme, e) {
+  const d = EJEMPLO[meme];
+  if (e.rol === 'venezuela') return { ...EJEMPLO.venezuela, nombre: e.nombreFijo || 'Venezuela' };
+  if (e.rol === 'proxima') return d.proxima;
+  if (e.rol === 'primero') return d.primero;
+  if (e.rol === 'victima') return d.victima[e.indice - 1];
+  if (e.rol === 'arriba') return d.arriba[e.indice - 1];
+  if (e.rol === 'abajo') return d.abajo[e.indice - 1];
+}
+
+function pintar(meme) {
+  const cfg = CONFIG[meme];
+  const raiz = document.getElementById('meme-' + meme);
+  if (cfg.marca) raiz.querySelector('.marca').classList.add(cfg.marca.esquina);
+  for (const e of cfg.etiquetas) {
+    const d = datoPara(meme, e);
+    const el = document.createElement('div');
+    el.className = 'etiqueta ' + e.ancla + (e.rol === 'venezuela' ? ' grande' : '');
+    el.style.left = e.x + '%';
+    el.style.top = e.y + '%';
+    el.style.width = e.ancho + '%';
+    el.style.setProperty('--fuente', e.fuente);
+    el.dataset.id = e.id;
+    if (e.rotulo) for (const linea of e.rotulo) el.insertAdjacentHTML('beforeend', `<span class="txt rotulo-meme">${linea}</span>`);
+    if (e.muestra.includes('bandera')) el.insertAdjacentHTML('beforeend', `<span class="fi fi-${d.iso}"></span>`);
+    const partes = [];
+    if (e.muestra.includes('puesto')) partes.push('#' + d.puesto);
+    if (e.muestra.includes('nombre')) partes.push(d.nombre);
+    if (partes.length) el.insertAdjacentHTML('beforeend', `<span class="txt">${partes.join(' ')}</span>`);
+    raiz.appendChild(el);
+  }
+}
+
+// Achica el texto que no cabe en el ancho de su etiqueta
+function ajustar() {
+  document.querySelectorAll('.etiqueta .txt').forEach(t => {
+    t.style.fontSize = '';
+    let f = 1;
+    while (t.scrollWidth > t.parentElement.clientWidth && f > 0.5) { f -= 0.05; t.style.fontSize = f + 'em'; }
+  });
+}
+
+pintar('puertas');
+pintar('escalera');
+document.fonts.ready.then(ajustar);
+new ResizeObserver(ajustar).observe(document.body);
+document.getElementById('guias').addEventListener('change', ev => document.body.classList.toggle('guias', ev.target.checked));
+
+document.querySelectorAll('.boton-descarga').forEach(b => b.addEventListener('click', async () => {
+  const meme = b.dataset.meme, nodo = document.getElementById('meme-' + meme), cfg = CONFIG[meme];
+  if (!window.htmlToImage) { b.textContent = 'Sin conexión: no se puede descargar'; return; }
+  await document.fonts.ready;
+  const opciones = { pixelRatio: cfg.ancho / nodo.clientWidth, cacheBust: true };
+  try {
+    await htmlToImage.toPng(nodo, opciones);              // primera captura: calienta Safari
+    const url = await htmlToImage.toPng(nodo, opciones);  // segunda: la buena
+    const a = document.createElement('a');
+    a.href = url; a.download = `laremontada-${meme}-${new Date().toISOString().slice(0, 10)}.png`;
+    a.click();
+  } catch (err) {
+    b.textContent = 'No se pudo generar la imagen. Abre la página con un servidor local.';
+  }
+}));
+</script>
+</body>
+</html>

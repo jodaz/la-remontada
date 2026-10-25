@@ -1,0 +1,164 @@
+/* La Remontada · tokens de diseño
+   Concepto: billete de bolívar (papel moneda, guilloché, número de serie,
+   letra pequeña) con los colores de la bandera. El amarillo es solo de Venezuela.
+
+   Google Fonts (una sola petición):
+   https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@700;800;900&family=Martian+Mono:wght@400;600&display=swap
+*/
+
+:root {
+  /* Color · tema claro */
+  --papel: #EDF0E6;        /* fondo: papel moneda */
+  --papel-2: #E2E7D9;      /* superficies: tarjetas, tabla, controles */
+  --tinta: #1B2738;        /* texto principal */
+  --tinta-suave: #56627A;  /* texto secundario, ejes, letra pequeña */
+  --guilloche: #A8BBA9;    /* tramas, cuadrícula, bordes finos */
+  --amarillo: #F2C12E;     /* Venezuela, botón principal (nunca como texto sobre papel) */
+  --azul: #1E3F8C;         /* enlaces, foco, isotipo */
+  --rojo: #C3302B;         /* sellos, aviso de caída */
+  --barra: #A3ABB4;        /* barras y líneas de los demás países */
+
+  /* Tipografía */
+  --f-titulo: "Big Shoulders Display", Impact, "Arial Narrow", sans-serif;
+  --f-texto: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --f-datos: "Martian Mono", ui-monospace, monospace;
+  --f-meme: "Anton", Impact, sans-serif;
+
+  /* Escala tipográfica (celular → escritorio) */
+  --t-12: 0.75rem;
+  --t-14: 0.875rem;
+  --t-16: 1rem;
+  --t-20: 1.25rem;
+  --t-28: 1.75rem;
+  --t-40: 2.5rem;
+  --t-64: 4rem;
+
+  /* Forma */
+  --radio: 4px;
+  --borde: 2px;
+  --sombra-sello: 3px 3px 0 var(--tinta);
+  --guiado: 0.08em; /* letter-spacing de etiquetas en mayúsculas */
+
+  /* Medidas */
+  --ancho-meme: 720px;
+  --ancho-texto: 60ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papel: #0F1621;
+    --papel-2: #172130;
+    --tinta: #E7EBE1;
+    --tinta-suave: #9BA6B8;
+    --guilloche: #2D4650;
+    --amarillo: #F5CC4E;
+    --azul: #7C9CF2;
+    --rojo: #F0695C;
+    --barra: #4A5566;
+    --sombra-sello: 3px 3px 0 #000;
+    color-scheme: dark;
+  }
+}
+
+body {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--f-texto);
+  font-size: var(--t-16);
+  line-height: 1.5;
+}
+
+h1, h2, h3, .cifra-grande {
+  font-family: var(--f-titulo);
+  font-weight: 800;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.datos, .serie, .contador {
+  font-family: var(--f-datos);
+  font-variant-numeric: tabular-nums;
+}
+
+.rotulo {
+  text-transform: uppercase;
+  letter-spacing: var(--guiado);
+}
+
+:focus-visible {
+  outline: 3px solid var(--azul);
+  outline-offset: 2px;
+}
+
+/* Botón principal: sello amarillo */
+.boton-descarga {
+  font: 700 var(--t-16) / 1 var(--f-texto);
+  background: var(--amarillo);
+  color: #1B2738; /* siempre tinta oscura sobre amarillo, en ambos temas */
+  border: var(--borde) solid var(--tinta);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-sello);
+  padding: 0.85em 1.25em;
+  cursor: pointer;
+  transition: transform 80ms, box-shadow 80ms;
+}
+.boton-descarga:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+/* Botón secundario */
+.boton-numeros {
+  font: 700 var(--t-16) / 1 var(--f-texto);
+  background: transparent;
+  color: var(--tinta);
+  border: var(--borde) solid var(--tinta);
+  border-radius: var(--radio);
+  padding: 0.85em 1.25em;
+}
+.boton-numeros::after { content: " →"; }
+
+/* Marco del meme: doble línea de billete (no sale en la descarga) */
+.marco-billete {
+  border: 1px solid var(--guilloche);
+  outline: 1px solid var(--guilloche);
+  outline-offset: 4px;
+  padding: 8px;
+  max-width: var(--ancho-meme);
+}
+
+/* Letra pequeña: la nota de realidad */
+.letra-pequena {
+  max-width: var(--ancho-texto);
+  font-size: var(--t-14);
+  color: var(--tinta);
+}
+.letra-pequena::before {
+  content: "LETRA PEQUEÑA";
+  display: block;
+  font: 600 11px / 1.4 var(--f-datos);
+  letter-spacing: var(--guiado);
+  color: var(--tinta-suave);
+  margin-bottom: 0.25em;
+}
+
+/* Sello de goma: CAÍDA / PROYECCIÓN */
+.sello {
+  display: inline-block;
+  font: 900 var(--t-20) / 1 var(--f-titulo);
+  letter-spacing: var(--guiado);
+  text-transform: uppercase;
+  color: var(--rojo);
+  border: 2px solid currentColor;
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+  padding: 0.2em 0.5em;
+  transform: rotate(-6deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
