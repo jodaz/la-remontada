@@ -2,6 +2,8 @@
   "meme": "puertas",
   "ruta": "/victima",
   "imagen": "puertas.jpg",
+  "imagenWebp": "puertas.webp",
+  "imagenMini": "puertas-mini.webp",
   "ancho": 640,
   "alto": 357,
   "nota": "x, y, ancho y fuente en % del ancho/alto de la imagen. 'ancla' indica qué borde de la etiqueta cae en (x, y): 'abajo' = borde inferior centrado, 'arriba' = borde superior centrado. 'fuente' es el tamaño de letra en % del ancho de la imagen.",

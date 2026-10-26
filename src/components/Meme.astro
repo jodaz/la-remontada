@@ -54,7 +54,9 @@ const resumen =
 <figure class:list={["marco-billete", "marco-meme"]} data-figura={meme}>
   <div class="meme" data-meme={meme} data-ancho={config.ancho} data-alto={config.alto}>
     <img
-      src={`/memes/${config.imagen}`}
+      src={`/memes/${config.imagenWebp}`}
+      srcset={config.imagenSrcset}
+      sizes={config.imagenSizes}
       width={config.ancho}
       height={config.alto}
       alt={ALT[meme]}

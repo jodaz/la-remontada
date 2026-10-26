@@ -38,6 +38,7 @@ pnpm exec playwright install --with-deps chromium   # una vez, para build y capt
 | `pnpm headers` | Genera `dist/_headers` y copia `data/*.json` a `dist/data/`. |
 | `pnpm headers:verificar` | Carga el build en Playwright y falla si hay violaciones de CSP. |
 | `pnpm revision` | Capturas de todas las rutas en 360/400/768/1280 px, claro y oscuro. Falla por desborde horizontal o etiquetas fuera del meme. |
+| `pnpm banderas` | Regenera `public/banderas/*.webp` y `src/styles/banderas.css` desde los SVG de `flag-icons`. |
 | `pnpm lighthouse` | Lighthouse móvil de las cinco rutas. Falla con rendimiento < 90 o accesibilidad < 95. |
 | `pnpm actualizar-fmi` | Descarga, valida y escribe `data/pib.json`. Ver abajo. |
 
@@ -51,11 +52,13 @@ src/pages/        /, /victima, /ranking, /victima/numeros, /ranking/numeros
 src/components/   Meme, Etiqueta, NotaRealidad, BotonDescarga, …
 src/islands/      islas con JavaScript solo en las páginas de números
 src/lib/          interpolar, ranking, victimas, notas y modelo (funciones puras)
-src/styles/       tokens.css: colores, fuentes y estilos base
+src/styles/       tokens.css (tokens y base), fuentes.css (woff2 propios), banderas.css (generada)
 data/             pib.json y paises.json (datos del FMI versionados)
 memes/            puertas.json y escalera.json (posiciones de etiquetas)
-public/memes/     imágenes base de los memes
-scripts/          actualizar-fmi, capturas-og, headers, revision-visual, lighthouse
+public/fonts/     woff2 autoalojados y licencias OFL
+public/banderas/  banderas WebP generadas de flag-icons
+public/memes/     imágenes base de los memes (JPG original + WebP servidos)
+scripts/          actualizar-fmi, capturas-og, generar-banderas, headers, revision-visual, lighthouse
 tests/            pruebas de src/lib
 docs/PRD.md       especificación
 ```
@@ -175,6 +178,7 @@ corta de `/*` con `! Cache-Control` y fijan la suya):
 | Ruta | Caché |
 | --- | --- |
 | `/_astro/*` | `max-age=31536000, immutable` |
+| `/fonts/*` y `/banderas/*` | `max-age=31536000, immutable` (la versión va en el nombre) |
 | `/memes/*` y `/og/*` | `max-age=86400` (la og se regenera en cada recompilación) |
 | `/data/*` | `max-age=300` |
 | resto (HTML) | `max-age=0, must-revalidate` |
@@ -185,10 +189,18 @@ mínima, `X-Frame-Options: DENY` y `frame-ancestors 'none'`.
 
 ### Rendimiento
 
-`astro.config.mjs` fija `vite.build.assetsInlineLimit = 0`: sin eso, Vite
-incrusta las ~270 banderas SVG de `flag-icons` como data URI en el CSS (más de
-400 KB) y se descargan todas. Con archivos separados solo baja la bandera que
-la página usa, como pide el PRD. El servidor de pruebas de Playwright comprime
+Las fuentes de Google Fonts se autoalojan como woff2 en `public/fonts/`
+(`src/styles/fuentes.css`): no queda ninguna petición a `fonts.googleapis.com`
+ni a `fonts.gstatic.com`. Solo Anton, la fuente de las etiquetas del meme, se
+precarga; Big Shoulders, Atkinson y Martian se cargan con el CSS.
+
+Las banderas de `flag-icons` se rasterizan a WebP de 128×96 con
+`node scripts/generar-banderas.mjs` (`public/banderas/`, CSS en
+`src/styles/banderas.css`). El SVG original de Serbia pesa 180 KB; el WebP,
+2 KB. Así las banderas no compiten con la imagen del meme por el LCP.
+
+El CSS va dentro del HTML (`build.inlineStylesheets = "always"`), una petición
+menos antes del primer pintado. El servidor de pruebas de Playwright comprime
 con gzip para parecerse a Cloudflare.
 
 ## Secretos de GitHub Actions

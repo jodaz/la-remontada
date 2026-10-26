@@ -1,0 +1,261 @@
+/* Generado por scripts/generar-banderas.mjs; no editar a mano.
+   Base de flag-icons (MIT) y banderas rasterizadas de sus SVG en public/banderas/.
+   Versión 1: al regenerar con otros trazos, sube VERSION en el script. */
+
+.fib,
+.fi {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+.fi {
+  position: relative;
+  display: inline-block;
+  width: 1.333333em;
+  line-height: 1em;
+}
+.fi::before {
+  /* Espacio duro (U+00A0), como flag-icons: un espacio normal colapsa y la
+     bandera se queda sin alto. */
+  content: "\00a0";
+}
+.fi.fis {
+  width: 1em;
+}
+
+.fi.fi-ad { background-image: url("/banderas/ad-v1.webp"); }
+.fi.fi-ae { background-image: url("/banderas/ae-v1.webp"); }
+.fi.fi-af { background-image: url("/banderas/af-v1.webp"); }
+.fi.fi-ag { background-image: url("/banderas/ag-v1.webp"); }
+.fi.fi-ai { background-image: url("/banderas/ai-v1.webp"); }
+.fi.fi-al { background-image: url("/banderas/al-v1.webp"); }
+.fi.fi-am { background-image: url("/banderas/am-v1.webp"); }
+.fi.fi-ao { background-image: url("/banderas/ao-v1.webp"); }
+.fi.fi-ar { background-image: url("/banderas/ar-v1.webp"); }
+.fi.fi-as { background-image: url("/banderas/as-v1.webp"); }
+.fi.fi-at { background-image: url("/banderas/at-v1.webp"); }
+.fi.fi-au { background-image: url("/banderas/au-v1.webp"); }
+.fi.fi-aw { background-image: url("/banderas/aw-v1.webp"); }
+.fi.fi-az { background-image: url("/banderas/az-v1.webp"); }
+.fi.fi-ba { background-image: url("/banderas/ba-v1.webp"); }
+.fi.fi-bb { background-image: url("/banderas/bb-v1.webp"); }
+.fi.fi-bd { background-image: url("/banderas/bd-v1.webp"); }
+.fi.fi-be { background-image: url("/banderas/be-v1.webp"); }
+.fi.fi-bf { background-image: url("/banderas/bf-v1.webp"); }
+.fi.fi-bg { background-image: url("/banderas/bg-v1.webp"); }
+.fi.fi-bh { background-image: url("/banderas/bh-v1.webp"); }
+.fi.fi-bi { background-image: url("/banderas/bi-v1.webp"); }
+.fi.fi-bj { background-image: url("/banderas/bj-v1.webp"); }
+.fi.fi-bm { background-image: url("/banderas/bm-v1.webp"); }
+.fi.fi-bn { background-image: url("/banderas/bn-v1.webp"); }
+.fi.fi-bo { background-image: url("/banderas/bo-v1.webp"); }
+.fi.fi-bq { background-image: url("/banderas/bq-v1.webp"); }
+.fi.fi-br { background-image: url("/banderas/br-v1.webp"); }
+.fi.fi-bs { background-image: url("/banderas/bs-v1.webp"); }
+.fi.fi-bt { background-image: url("/banderas/bt-v1.webp"); }
+.fi.fi-bw { background-image: url("/banderas/bw-v1.webp"); }
+.fi.fi-by { background-image: url("/banderas/by-v1.webp"); }
+.fi.fi-bz { background-image: url("/banderas/bz-v1.webp"); }
+.fi.fi-ca { background-image: url("/banderas/ca-v1.webp"); }
+.fi.fi-cd { background-image: url("/banderas/cd-v1.webp"); }
+.fi.fi-cf { background-image: url("/banderas/cf-v1.webp"); }
+.fi.fi-cg { background-image: url("/banderas/cg-v1.webp"); }
+.fi.fi-ch { background-image: url("/banderas/ch-v1.webp"); }
+.fi.fi-ci { background-image: url("/banderas/ci-v1.webp"); }
+.fi.fi-ck { background-image: url("/banderas/ck-v1.webp"); }
+.fi.fi-cl { background-image: url("/banderas/cl-v1.webp"); }
+.fi.fi-cm { background-image: url("/banderas/cm-v1.webp"); }
+.fi.fi-cn { background-image: url("/banderas/cn-v1.webp"); }
+.fi.fi-co { background-image: url("/banderas/co-v1.webp"); }
+.fi.fi-cr { background-image: url("/banderas/cr-v1.webp"); }
+.fi.fi-cu { background-image: url("/banderas/cu-v1.webp"); }
+.fi.fi-cv { background-image: url("/banderas/cv-v1.webp"); }
+.fi.fi-cw { background-image: url("/banderas/cw-v1.webp"); }
+.fi.fi-cy { background-image: url("/banderas/cy-v1.webp"); }
+.fi.fi-cz { background-image: url("/banderas/cz-v1.webp"); }
+.fi.fi-de { background-image: url("/banderas/de-v1.webp"); }
+.fi.fi-dj { background-image: url("/banderas/dj-v1.webp"); }
+.fi.fi-dk { background-image: url("/banderas/dk-v1.webp"); }
+.fi.fi-dm { background-image: url("/banderas/dm-v1.webp"); }
+.fi.fi-do { background-image: url("/banderas/do-v1.webp"); }
+.fi.fi-dz { background-image: url("/banderas/dz-v1.webp"); }
+.fi.fi-ec { background-image: url("/banderas/ec-v1.webp"); }
+.fi.fi-ee { background-image: url("/banderas/ee-v1.webp"); }
+.fi.fi-eg { background-image: url("/banderas/eg-v1.webp"); }
+.fi.fi-eh { background-image: url("/banderas/eh-v1.webp"); }
+.fi.fi-er { background-image: url("/banderas/er-v1.webp"); }
+.fi.fi-es { background-image: url("/banderas/es-v1.webp"); }
+.fi.fi-et { background-image: url("/banderas/et-v1.webp"); }
+.fi.fi-fi { background-image: url("/banderas/fi-v1.webp"); }
+.fi.fi-fj { background-image: url("/banderas/fj-v1.webp"); }
+.fi.fi-fk { background-image: url("/banderas/fk-v1.webp"); }
+.fi.fi-fm { background-image: url("/banderas/fm-v1.webp"); }
+.fi.fi-fo { background-image: url("/banderas/fo-v1.webp"); }
+.fi.fi-fr { background-image: url("/banderas/fr-v1.webp"); }
+.fi.fi-ga { background-image: url("/banderas/ga-v1.webp"); }
+.fi.fi-gb { background-image: url("/banderas/gb-v1.webp"); }
+.fi.fi-gd { background-image: url("/banderas/gd-v1.webp"); }
+.fi.fi-ge { background-image: url("/banderas/ge-v1.webp"); }
+.fi.fi-gf { background-image: url("/banderas/gf-v1.webp"); }
+.fi.fi-gh { background-image: url("/banderas/gh-v1.webp"); }
+.fi.fi-gi { background-image: url("/banderas/gi-v1.webp"); }
+.fi.fi-gl { background-image: url("/banderas/gl-v1.webp"); }
+.fi.fi-gm { background-image: url("/banderas/gm-v1.webp"); }
+.fi.fi-gn { background-image: url("/banderas/gn-v1.webp"); }
+.fi.fi-gp { background-image: url("/banderas/gp-v1.webp"); }
+.fi.fi-gq { background-image: url("/banderas/gq-v1.webp"); }
+.fi.fi-gr { background-image: url("/banderas/gr-v1.webp"); }
+.fi.fi-gt { background-image: url("/banderas/gt-v1.webp"); }
+.fi.fi-gu { background-image: url("/banderas/gu-v1.webp"); }
+.fi.fi-gw { background-image: url("/banderas/gw-v1.webp"); }
+.fi.fi-gy { background-image: url("/banderas/gy-v1.webp"); }
+.fi.fi-hk { background-image: url("/banderas/hk-v1.webp"); }
+.fi.fi-hn { background-image: url("/banderas/hn-v1.webp"); }
+.fi.fi-hr { background-image: url("/banderas/hr-v1.webp"); }
+.fi.fi-ht { background-image: url("/banderas/ht-v1.webp"); }
+.fi.fi-hu { background-image: url("/banderas/hu-v1.webp"); }
+.fi.fi-id { background-image: url("/banderas/id-v1.webp"); }
+.fi.fi-ie { background-image: url("/banderas/ie-v1.webp"); }
+.fi.fi-il { background-image: url("/banderas/il-v1.webp"); }
+.fi.fi-in { background-image: url("/banderas/in-v1.webp"); }
+.fi.fi-io { background-image: url("/banderas/io-v1.webp"); }
+.fi.fi-iq { background-image: url("/banderas/iq-v1.webp"); }
+.fi.fi-ir { background-image: url("/banderas/ir-v1.webp"); }
+.fi.fi-is { background-image: url("/banderas/is-v1.webp"); }
+.fi.fi-it { background-image: url("/banderas/it-v1.webp"); }
+.fi.fi-jm { background-image: url("/banderas/jm-v1.webp"); }
+.fi.fi-jo { background-image: url("/banderas/jo-v1.webp"); }
+.fi.fi-jp { background-image: url("/banderas/jp-v1.webp"); }
+.fi.fi-ke { background-image: url("/banderas/ke-v1.webp"); }
+.fi.fi-kg { background-image: url("/banderas/kg-v1.webp"); }
+.fi.fi-kh { background-image: url("/banderas/kh-v1.webp"); }
+.fi.fi-ki { background-image: url("/banderas/ki-v1.webp"); }
+.fi.fi-km { background-image: url("/banderas/km-v1.webp"); }
+.fi.fi-kn { background-image: url("/banderas/kn-v1.webp"); }
+.fi.fi-kp { background-image: url("/banderas/kp-v1.webp"); }
+.fi.fi-kr { background-image: url("/banderas/kr-v1.webp"); }
+.fi.fi-kw { background-image: url("/banderas/kw-v1.webp"); }
+.fi.fi-ky { background-image: url("/banderas/ky-v1.webp"); }
+.fi.fi-kz { background-image: url("/banderas/kz-v1.webp"); }
+.fi.fi-la { background-image: url("/banderas/la-v1.webp"); }
+.fi.fi-lb { background-image: url("/banderas/lb-v1.webp"); }
+.fi.fi-lc { background-image: url("/banderas/lc-v1.webp"); }
+.fi.fi-li { background-image: url("/banderas/li-v1.webp"); }
+.fi.fi-lk { background-image: url("/banderas/lk-v1.webp"); }
+.fi.fi-lr { background-image: url("/banderas/lr-v1.webp"); }
+.fi.fi-ls { background-image: url("/banderas/ls-v1.webp"); }
+.fi.fi-lt { background-image: url("/banderas/lt-v1.webp"); }
+.fi.fi-lu { background-image: url("/banderas/lu-v1.webp"); }
+.fi.fi-lv { background-image: url("/banderas/lv-v1.webp"); }
+.fi.fi-ly { background-image: url("/banderas/ly-v1.webp"); }
+.fi.fi-ma { background-image: url("/banderas/ma-v1.webp"); }
+.fi.fi-mc { background-image: url("/banderas/mc-v1.webp"); }
+.fi.fi-md { background-image: url("/banderas/md-v1.webp"); }
+.fi.fi-me { background-image: url("/banderas/me-v1.webp"); }
+.fi.fi-mg { background-image: url("/banderas/mg-v1.webp"); }
+.fi.fi-mh { background-image: url("/banderas/mh-v1.webp"); }
+.fi.fi-mk { background-image: url("/banderas/mk-v1.webp"); }
+.fi.fi-ml { background-image: url("/banderas/ml-v1.webp"); }
+.fi.fi-mm { background-image: url("/banderas/mm-v1.webp"); }
+.fi.fi-mn { background-image: url("/banderas/mn-v1.webp"); }
+.fi.fi-mo { background-image: url("/banderas/mo-v1.webp"); }
+.fi.fi-mp { background-image: url("/banderas/mp-v1.webp"); }
+.fi.fi-mq { background-image: url("/banderas/mq-v1.webp"); }
+.fi.fi-mr { background-image: url("/banderas/mr-v1.webp"); }
+.fi.fi-ms { background-image: url("/banderas/ms-v1.webp"); }
+.fi.fi-mt { background-image: url("/banderas/mt-v1.webp"); }
+.fi.fi-mu { background-image: url("/banderas/mu-v1.webp"); }
+.fi.fi-mv { background-image: url("/banderas/mv-v1.webp"); }
+.fi.fi-mw { background-image: url("/banderas/mw-v1.webp"); }
+.fi.fi-mx { background-image: url("/banderas/mx-v1.webp"); }
+.fi.fi-my { background-image: url("/banderas/my-v1.webp"); }
+.fi.fi-mz { background-image: url("/banderas/mz-v1.webp"); }
+.fi.fi-na { background-image: url("/banderas/na-v1.webp"); }
+.fi.fi-nc { background-image: url("/banderas/nc-v1.webp"); }
+.fi.fi-ne { background-image: url("/banderas/ne-v1.webp"); }
+.fi.fi-ng { background-image: url("/banderas/ng-v1.webp"); }
+.fi.fi-ni { background-image: url("/banderas/ni-v1.webp"); }
+.fi.fi-nl { background-image: url("/banderas/nl-v1.webp"); }
+.fi.fi-no { background-image: url("/banderas/no-v1.webp"); }
+.fi.fi-np { background-image: url("/banderas/np-v1.webp"); }
+.fi.fi-nr { background-image: url("/banderas/nr-v1.webp"); }
+.fi.fi-nu { background-image: url("/banderas/nu-v1.webp"); }
+.fi.fi-nz { background-image: url("/banderas/nz-v1.webp"); }
+.fi.fi-om { background-image: url("/banderas/om-v1.webp"); }
+.fi.fi-pa { background-image: url("/banderas/pa-v1.webp"); }
+.fi.fi-pe { background-image: url("/banderas/pe-v1.webp"); }
+.fi.fi-pf { background-image: url("/banderas/pf-v1.webp"); }
+.fi.fi-pg { background-image: url("/banderas/pg-v1.webp"); }
+.fi.fi-ph { background-image: url("/banderas/ph-v1.webp"); }
+.fi.fi-pk { background-image: url("/banderas/pk-v1.webp"); }
+.fi.fi-pl { background-image: url("/banderas/pl-v1.webp"); }
+.fi.fi-pm { background-image: url("/banderas/pm-v1.webp"); }
+.fi.fi-pn { background-image: url("/banderas/pn-v1.webp"); }
+.fi.fi-pr { background-image: url("/banderas/pr-v1.webp"); }
+.fi.fi-ps { background-image: url("/banderas/ps-v1.webp"); }
+.fi.fi-pt { background-image: url("/banderas/pt-v1.webp"); }
+.fi.fi-pw { background-image: url("/banderas/pw-v1.webp"); }
+.fi.fi-py { background-image: url("/banderas/py-v1.webp"); }
+.fi.fi-qa { background-image: url("/banderas/qa-v1.webp"); }
+.fi.fi-re { background-image: url("/banderas/re-v1.webp"); }
+.fi.fi-ro { background-image: url("/banderas/ro-v1.webp"); }
+.fi.fi-rs { background-image: url("/banderas/rs-v1.webp"); }
+.fi.fi-ru { background-image: url("/banderas/ru-v1.webp"); }
+.fi.fi-rw { background-image: url("/banderas/rw-v1.webp"); }
+.fi.fi-sa { background-image: url("/banderas/sa-v1.webp"); }
+.fi.fi-sb { background-image: url("/banderas/sb-v1.webp"); }
+.fi.fi-sc { background-image: url("/banderas/sc-v1.webp"); }
+.fi.fi-sd { background-image: url("/banderas/sd-v1.webp"); }
+.fi.fi-se { background-image: url("/banderas/se-v1.webp"); }
+.fi.fi-sg { background-image: url("/banderas/sg-v1.webp"); }
+.fi.fi-sh { background-image: url("/banderas/sh-v1.webp"); }
+.fi.fi-si { background-image: url("/banderas/si-v1.webp"); }
+.fi.fi-sj { background-image: url("/banderas/sj-v1.webp"); }
+.fi.fi-sk { background-image: url("/banderas/sk-v1.webp"); }
+.fi.fi-sl { background-image: url("/banderas/sl-v1.webp"); }
+.fi.fi-sm { background-image: url("/banderas/sm-v1.webp"); }
+.fi.fi-sn { background-image: url("/banderas/sn-v1.webp"); }
+.fi.fi-so { background-image: url("/banderas/so-v1.webp"); }
+.fi.fi-sr { background-image: url("/banderas/sr-v1.webp"); }
+.fi.fi-ss { background-image: url("/banderas/ss-v1.webp"); }
+.fi.fi-st { background-image: url("/banderas/st-v1.webp"); }
+.fi.fi-sv { background-image: url("/banderas/sv-v1.webp"); }
+.fi.fi-sx { background-image: url("/banderas/sx-v1.webp"); }
+.fi.fi-sy { background-image: url("/banderas/sy-v1.webp"); }
+.fi.fi-sz { background-image: url("/banderas/sz-v1.webp"); }
+.fi.fi-tc { background-image: url("/banderas/tc-v1.webp"); }
+.fi.fi-td { background-image: url("/banderas/td-v1.webp"); }
+.fi.fi-tg { background-image: url("/banderas/tg-v1.webp"); }
+.fi.fi-th { background-image: url("/banderas/th-v1.webp"); }
+.fi.fi-tj { background-image: url("/banderas/tj-v1.webp"); }
+.fi.fi-tk { background-image: url("/banderas/tk-v1.webp"); }
+.fi.fi-tl { background-image: url("/banderas/tl-v1.webp"); }
+.fi.fi-tm { background-image: url("/banderas/tm-v1.webp"); }
+.fi.fi-tn { background-image: url("/banderas/tn-v1.webp"); }
+.fi.fi-to { background-image: url("/banderas/to-v1.webp"); }
+.fi.fi-tr { background-image: url("/banderas/tr-v1.webp"); }
+.fi.fi-tt { background-image: url("/banderas/tt-v1.webp"); }
+.fi.fi-tv { background-image: url("/banderas/tv-v1.webp"); }
+.fi.fi-tw { background-image: url("/banderas/tw-v1.webp"); }
+.fi.fi-tz { background-image: url("/banderas/tz-v1.webp"); }
+.fi.fi-ua { background-image: url("/banderas/ua-v1.webp"); }
+.fi.fi-ug { background-image: url("/banderas/ug-v1.webp"); }
+.fi.fi-us { background-image: url("/banderas/us-v1.webp"); }
+.fi.fi-uy { background-image: url("/banderas/uy-v1.webp"); }
+.fi.fi-uz { background-image: url("/banderas/uz-v1.webp"); }
+.fi.fi-va { background-image: url("/banderas/va-v1.webp"); }
+.fi.fi-vc { background-image: url("/banderas/vc-v1.webp"); }
+.fi.fi-ve { background-image: url("/banderas/ve-v1.webp"); }
+.fi.fi-vg { background-image: url("/banderas/vg-v1.webp"); }
+.fi.fi-vi { background-image: url("/banderas/vi-v1.webp"); }
+.fi.fi-vn { background-image: url("/banderas/vn-v1.webp"); }
+.fi.fi-vu { background-image: url("/banderas/vu-v1.webp"); }
+.fi.fi-wf { background-image: url("/banderas/wf-v1.webp"); }
+.fi.fi-ws { background-image: url("/banderas/ws-v1.webp"); }
+.fi.fi-xk { background-image: url("/banderas/xk-v1.webp"); }
+.fi.fi-xx { background-image: url("/banderas/xx-v1.webp"); }
+.fi.fi-ye { background-image: url("/banderas/ye-v1.webp"); }
+.fi.fi-yt { background-image: url("/banderas/yt-v1.webp"); }
+.fi.fi-za { background-image: url("/banderas/za-v1.webp"); }
+.fi.fi-zm { background-image: url("/banderas/zm-v1.webp"); }
+.fi.fi-zw { background-image: url("/banderas/zw-v1.webp"); }

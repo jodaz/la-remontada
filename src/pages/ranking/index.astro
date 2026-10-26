@@ -7,6 +7,7 @@ import { memes, modelo } from "../../lib/datos.ts";
 
 const MEME = "escalera" as const;
 const numeros = `${memes[MEME].ruta}/numeros`;
+const h1 = `La escalera de medallas: ${modelo.lema}`;
 ---
 
 <Layout
@@ -15,6 +16,17 @@ const numeros = `${memes[MEME].ruta}/numeros`;
   og="/og/ranking.png"
   ruta="/ranking"
 >
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href={`/memes/${memes[MEME].imagenWebp}`}
+    type="image/webp"
+    imagesrcset={memes[MEME].imagenSrcset}
+    imagesizes={memes[MEME].imagenSizes}
+    fetchpriority="high"
+  />
+  <h1 class="visualmente-oculto">{h1}</h1>
   <section class="pantalla-meme">
     <Meme meme={MEME} />
     <BotonDescarga meme={MEME} />

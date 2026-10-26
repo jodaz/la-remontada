@@ -59,10 +59,11 @@ function politica(hashes: string[]): string {
   return [
     "default-src 'self'",
     `script-src ${scriptSrc.join(" ")}`,
-    // Cloudflare Web Analytics y html-to-image.
-    "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cloudflareinsights.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com data:",
+    // Cloudflare Web Analytics. Las fuentes son propias (font-src 'self').
+    "connect-src 'self' https://cloudflareinsights.com",
+    "style-src 'self' 'unsafe-inline'",
+    // data: cubre las fuentes que html-to-image incrusta en el SVG de la descarga.
+    "font-src 'self' data:",
     "img-src 'self' data: blob:",
     "base-uri 'self'",
     "form-action 'self'",
@@ -93,6 +94,22 @@ export function reglas(dist: string): Regla[] {
     {
       // `!` quita la caché corta heredada de `/*` antes de fijar la larga.
       patron: "/_astro/*",
+      cabeceras: {
+        "!Cache-Control": "",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    },
+    {
+      // Los nombres llevan la versión (anton-v1-…), así que pueden cachearse para siempre.
+      patron: "/fonts/*",
+      cabeceras: {
+        "!Cache-Control": "",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    },
+    {
+      // Banderas rasterizadas con la versión en el nombre ({iso2}-v1.webp).
+      patron: "/banderas/*",
       cabeceras: {
         "!Cache-Control": "",
         "Cache-Control": "public, max-age=31536000, immutable",

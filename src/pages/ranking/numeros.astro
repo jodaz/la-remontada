@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import MemeMini from "../../components/MemeMini.astro";
 import Fuentes from "../../components/Fuentes.astro";
 import CarreraRanking from "../../islands/CarreraRanking.astro";
-import { modelo } from "../../lib/datos.ts";
+import { memes, modelo } from "../../lib/datos.ts";
 import { INICIO_CARRERA } from "../../config.ts";
 import { nombreMes } from "../../lib/meses.ts";
 
@@ -22,8 +22,16 @@ const explicacion2 = proxima
   descripcion={descripcion}
   og="/og/ranking-numeros.png"
   ruta="/ranking/numeros"
+  fuentesLocales
 >
-  <link slot="head" rel="preload" as="image" href="/memes/escalera.jpg" fetchpriority="high" />
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href={`/memes/${memes.escalera.imagenMini}`}
+    type="image/webp"
+    fetchpriority="high"
+  />
   <article class="numeros">
     <header class="numeros-cabecera">
       <p class="rotulo">Los números</p>

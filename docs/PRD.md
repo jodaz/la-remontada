@@ -119,7 +119,7 @@ La imagen tiene 12 personajes: 10 en los escalones de arriba, el que celebra y 1
 
 - Cada etiqueta es un bloque HTML con `position: absolute` sobre la imagen, ubicado en porcentajes (izquierda, arriba, ancho) para que escale igual en cualquier pantalla.
 - Las posiciones viven en un archivo por meme (`memes/puertas.json`, `memes/escalera.json`) que Astro lee al compilar. Hay una primera calibración en este paquete.
-- Bandera: clase de `flag-icons` (`fi fi-ve`). Texto: letra estilo meme, blanca con borde negro, en Anton (Google Fonts). Se achica sola si el nombre no cabe.
+- Bandera: clase de `flag-icons` (`fi fi-ve`). El sitio sirve la bandera como WebP generado de esos SVG (128×96), para que un SVG pesado no compita con la imagen del meme. Texto: letra estilo meme, blanca con borde negro, en Anton (autoalojada). Se achica sola si el nombre no cabe.
 - El PIB total de cada etiqueta sale de `data/` para el mes actual; la escalera lo abrevia en "MM" y las puertas usan la cifra estándar.
 - "Descargar meme" convierte el bloque del meme en PNG con `html-to-image`, al tamaño original de la imagen (ajustando `pixelRatio`), con `laremontada.vanguarddevs.com` en una esquina.
 - Antes de capturar se espera a `document.fonts.ready`. En Safari se captura dos veces y se usa la segunda, porque la primera puede salir con imágenes en blanco.
@@ -197,7 +197,7 @@ Todos los números salen de una sola fuente, el FMI, y viajan dentro del sitio c
 | --- | --- | --- | --- |
 | `data/pib.json` | PIB en dólares corrientes y PIB por persona, por país y año, 2019–2027 (2019 hace falta para estimar enero a junio de 2020) | FMI, World Economic Outlook, octubre 2026 | menos de 100 KB |
 | `data/paises.json` | Código ISO, nombre en español, nombre corto para etiquetas | Lista propia | menos de 20 KB |
-| `flag-icons` (npm) | Una bandera por país como clase CSS (`fi fi-ve`), formato 4:3 | [lipis/flag-icons](https://github.com/lipis/flag-icons), licencia MIT | el navegador baja solo las visibles |
+| `flag-icons` (npm) | Una bandera por país como clase CSS (`fi fi-ve`), formato 4:3 | [lipis/flag-icons](https://github.com/lipis/flag-icons), licencia MIT | el navegador baja solo las visibles, rasterizadas a WebP |
 | `memes/puertas.jpg`, `memes/escalera.jpg` | Las dos imágenes base | El dueño del sitio | 54 KB y 104 KB |
 | `memes/*.json` | Posición de cada etiqueta en cada imagen, en porcentajes | Lista propia | menos de 5 KB |
 
@@ -233,13 +233,13 @@ Es un sitio estático en Cloudflare Workers (assets estáticos): sin servidor pr
 | Framework | Astro en modo estático: cada ruta es una página HTML generada al compilar |
 | Rutas | `/` (meme al azar), `/victima`, `/ranking`, `/victima/numeros`, `/ranking/numeros` |
 | Meme al azar | Script en línea en el `<head>` de `/` que elige el meme antes de pintar |
-| Memes | Imagen base + etiquetas HTML posicionadas en porcentajes; banderas con `flag-icons` |
+| Memes | Imagen base + etiquetas HTML posicionadas en porcentajes; banderas con `flag-icons` servidas en WebP |
 | Descarga | `html-to-image` (`toPng`); respaldo con `canvas` |
 | Gráficos | Islas de Astro que cargan su JavaScript solo en las páginas de números |
 | Base de datos | Ninguna |
 | Automatización | GitHub Actions: datos del FMI con Pull Request, recompilación mensual, capturas con Playwright para la vista previa y prueba visual a ancho de celular |
 | Archivo | MEGA S4 guarda los datos crudos de cada edición del FMI y la captura de cada meme en cada recompilación. No sirve archivos al sitio |
-| Fuentes | Google Fonts; la descarga espera a que carguen |
+| Fuentes | Autoalojadas (descargadas de Google Fonts); la descarga espera a que carguen |
 | Analítica | Cloudflare Web Analytics por ruta; descargas con Cloudflare Zaraz si se decide contarlas |
 | Vista previa al compartir | `og:image` y `twitter:card` propias de cada ruta, con la captura de Playwright. El build de Cloudflare no trae Chromium: las capturas se generan en GitHub Actions y se versionan en `public/og/` |
 | Encabezados | Archivo `_headers` con política de seguridad de contenido y caché larga para archivos versionados; caché corta para `data/` |
@@ -248,7 +248,7 @@ Es un sitio estático en Cloudflare Workers (assets estáticos): sin servidor pr
 **Rendimiento**
 
 - El meme se ve en menos de 2 segundos en un celular con 4G.
-- La primera pantalla pesa menos de 600 KB: imagen base optimizada, CSS de `flag-icons` y solo las banderas visibles.
+- La primera pantalla pesa menos de 600 KB: imagen base optimizada (WebP), CSS propio de banderas y solo las banderas visibles.
 - Las páginas de meme casi no llevan JavaScript; el de los gráficos se carga solo en las páginas de números.
 
 **Compatibilidad**
@@ -330,7 +330,7 @@ No se usa el escudo nacional, ni logos o nombres de bancos reales.
 - La proyección se dibuja con rayas diagonales de 45° del mismo color de la barra, al 50%.
 - El tema sigue `prefers-color-scheme`; no hace falta botón de cambio de tema.
 
-### Tipografía (Google Fonts)
+### Tipografía (autoalojada, de Google Fonts)
 
 | Rol | Fuente | Uso | Respaldo |
 | --- | --- | --- | --- |
@@ -479,3 +479,4 @@ laremontada/
 - [Fermor: PIB de Venezuela según el FMI de abril 2026 (puesto 78)](https://fermor.in/gdp/venezuela)
 - [Bloomberg Línea: el BCV reporta 7,14% de crecimiento en el segundo trimestre de 2026](https://www.bloomberglinea.com/economia/bcv-dice-que-el-pib-venezolano-aumento-714-en-el-segundo-trimestre-de-2026/)
 - [lipis/flag-icons en GitHub](https://github.com/lipis/flag-icons)
+- [Google Fonts](https://fonts.google.com/): Anton, Atkinson Hyperlegible, Big Shoulders Display y Martian Mono, SIL Open Font License 1.1 (autoalojadas)

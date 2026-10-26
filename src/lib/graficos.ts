@@ -34,6 +34,17 @@ export function etiquetaMetrica(metrica: Metrica): string {
 }
 
 /**
+ * Anuncio de las caídas de un mes: una, dos o varias, en una sola frase.
+ * "Cae Omán" · "Caen Omán y Croacia" · "Caen Omán, Croacia y Serbia".
+ */
+export function listaCaidas(nombres: readonly string[]): string {
+  if (nombres.length === 0) return "";
+  if (nombres.length === 1) return `Cae ${nombres[0]}`;
+  if (nombres.length === 2) return `Caen ${nombres[0]} y ${nombres[1]}`;
+  return `Caen ${nombres.slice(0, -1).join(", ")} y ${nombres[nombres.length - 1]}`;
+}
+
+/**
  * Ventana de `cuantos` elementos con `indice` tan centrado como permita la lista.
  * Si la lista es más corta, devuelve todo. No muta la entrada.
  */

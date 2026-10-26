@@ -18,6 +18,7 @@
     "headers": "node scripts/headers.ts",
     "headers:verificar": "node scripts/headers.ts --verificar",
     "revision": "node scripts/revision-visual.ts",
+    "banderas": "node scripts/generar-banderas.mjs",
     "lighthouse": "node scripts/lighthouse.ts",
     "actualizar-fmi": "node scripts/actualizar-fmi.ts"
   },
