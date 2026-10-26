@@ -30,4 +30,13 @@ describe("etiquetas con PIB", () => {
     expect(ve?.pib).toBe(m.venezuela.valor);
     expect(ve?.pibCompacto).not.toBeNull();
   });
+
+  it("toda etiqueta con país pide su PIB, y solo las que tienen país lo piden", () => {
+    for (const meme of ["puertas", "escalera"] as const) {
+      for (const et of m.etiquetas[meme]) {
+        expect(et.meme, et.id).toBe(meme);
+        expect(et.muestra.includes("pib"), et.id).toBe(et.iso !== null);
+      }
+    }
+  });
 });

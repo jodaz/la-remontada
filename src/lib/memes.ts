@@ -6,6 +6,8 @@ import type { Victima } from "./victimas.ts";
 import type { EtiquetaConfig, MemeConfig, Pais } from "./tipos.ts";
 
 export interface EtiquetaResuelta extends EtiquetaConfig {
+  /** De qué meme sale la etiqueta: decide el formato del PIB (estándar o compacto). */
+  meme: MemeConfig["meme"];
   iso: string | null;
   pais: Pais | null;
   puesto: number | null;
@@ -76,6 +78,7 @@ export function resolverEtiquetas(config: MemeConfig, ctx: ContextoMeme): Etique
     const pib = r?.valor ?? null;
     return {
       ...et,
+      meme: config.meme,
       iso: r?.iso ?? null,
       pais,
       puesto: r?.puesto ?? null,

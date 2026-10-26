@@ -26,6 +26,13 @@ const esCelebra =
   et.rol === "venezuela" && et.muestra.includes("puesto") && et.muestra.includes("nombre");
 
 const rotulo = et.rotulo ?? [];
+// El PIB total también sale del modelo. Puertas lo escribe completo ("$124,2 mil M")
+// y escalera compacto ("$124 MM") porque cada escalón es más estrecho.
+const textoPib = et.muestra.includes("pib")
+  ? et.meme === "puertas"
+    ? et.pibEstandar
+    : et.pibCompacto
+  : null;
 // El puesto y el nombre nunca se escriben a mano: salen del modelo.
 const linea = [
   et.muestra.includes("puesto") && et.puesto != null ? `#${et.puesto}` : "",
@@ -98,6 +105,14 @@ const resumenOculto =
     )
   }
 
+  {
+    textoPib && (
+      <span class="txt pib-meme" style={`--ajuste:${escalaInicial(textoPib, 0.7)}`}>
+        {textoPib}
+      </span>
+    )
+  }
+
   {resumenOculto && <span class="visualmente-oculto">{resumenOculto}</span>}
 </div>
 
@@ -153,6 +168,10 @@ const resumenOculto =
   }
   .nombre-venezuela {
     --base: 0.95;
+  }
+  /* El PIB va debajo del nombre o del puesto, más pequeño, y se achica igual que el resto. */
+  .pib-meme {
+    --base: 0.7;
   }
 
   .fila {

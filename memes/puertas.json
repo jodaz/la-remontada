@@ -18,7 +18,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "nombre"
+        "nombre",
+        "pib"
       ]
     },
     {
@@ -33,7 +34,8 @@
       "fuente": 2.4,
       "muestra": [
         "bandera",
-        "nombre"
+        "nombre",
+        "pib"
       ]
     },
     {
@@ -48,7 +50,8 @@
       "fuente": 2.6,
       "muestra": [
         "bandera",
-        "nombre"
+        "nombre",
+        "pib"
       ]
     },
     {
@@ -63,7 +66,8 @@
       "fuente": 3,
       "muestra": [
         "bandera",
-        "nombre"
+        "nombre",
+        "pib"
       ]
     },
     {
@@ -78,7 +82,8 @@
       "fuente": 3.2,
       "muestra": [
         "bandera",
-        "nombre"
+        "nombre",
+        "pib"
       ]
     },
     {
@@ -93,7 +98,8 @@
       "muestra": [
         "bandera",
         "nombre",
-        "rotulo"
+        "rotulo",
+        "pib"
       ],
       "rotulo": [
         "PRÓXIMA",
@@ -111,7 +117,8 @@
       "fuente": 2.4,
       "muestra": [
         "bandera",
-        "nombre"
+        "nombre",
+        "pib"
       ],
       "nombreFijo": "VENEZUELA"
     }
