@@ -1,5 +1,6 @@
 // Qué país va en cada etiqueta de cada meme.
 
+import { pibMeme } from "./formato.ts";
 import type { PuestoRanking } from "./ranking.ts";
 import type { Victima } from "./victimas.ts";
 import type { EtiquetaConfig, MemeConfig, Pais } from "./tipos.ts";
@@ -8,6 +9,11 @@ export interface EtiquetaResuelta extends EtiquetaConfig {
   iso: string | null;
   pais: Pais | null;
   puesto: number | null;
+  /** PIB total del mes actual, en miles de millones de USD. */
+  pib: number | null;
+  /** El mismo PIB ya formateado para puertas ("$124,2 mil M") y escalera ("$124 MM"). */
+  pibEstandar: string | null;
+  pibCompacto: string | null;
   /** Texto del nombre, ya decidido (nombreFijo o nombre corto). */
   nombre: string | null;
 }
@@ -67,11 +73,15 @@ export function resolverEtiquetas(config: MemeConfig, ctx: ContextoMeme): Etique
   return config.etiquetas.map((et) => {
     const r = elegir(et, ctx, relleno);
     const pais = r ? (ctx.paises[r.iso] ?? null) : null;
+    const pib = r?.valor ?? null;
     return {
       ...et,
       iso: r?.iso ?? null,
       pais,
       puesto: r?.puesto ?? null,
+      pib,
+      pibEstandar: pib === null ? null : pibMeme(pib, "estandar"),
+      pibCompacto: pib === null ? null : pibMeme(pib, "compacto"),
       nombre: et.nombreFijo ?? pais?.corto ?? null,
     };
   });
