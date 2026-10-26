@@ -14,7 +14,7 @@ const proxima = modelo.proxima;
 const victimas = modelo.victimas;
 const descripcion = `El PIB de ${modelo.venezuela.pais.nombre} en vivo, las líneas que se cruzan con la próxima víctima y la lista de países que ha dejado atrás. Datos del FMI, ${modelo.edicion}.`;
 const explicacion1 = `En ${nombreMes(modelo.mesActual)}, ${modelo.venezuela.pais.nombre} está en el puesto ${modelo.venezuela.puesto} de ${totalPaises} países por PIB total; por PIB por persona, en el puesto ${modelo.venezuela.puestoPorPersona} de ${totalPorPersona}.`;
-const explicacion2 = `${proxima ? `La próxima víctima es ${proxima.pais.nombre}, en el puesto ${proxima.puesto}.` : `No hay ningún país por encima de ${modelo.venezuela.pais.nombre} en el ranking.`} Desde ${nombreMes(INICIO_VICTIMAS)} han caído ${victimas.length} ${victimas.length === 1 ? "país" : "países"} en el PIB total.`;
+const explicacion2 = `${proxima ? `La próxima víctima es ${proxima.pais.nombre}, en el puesto ${proxima.puesto}.` : `No hay ningún país por encima de ${modelo.venezuela.pais.nombre} en el ranking.`} Desde ${nombreMes(INICIO_VICTIMAS)} ${victimas.length === 1 ? `ha caído ${victimas.length} país` : `han caído ${victimas.length} países`} en el PIB total.`;
 ---
 
 <Layout
