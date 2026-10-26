@@ -113,13 +113,13 @@ const resumenOculto =
     font-family: var(--f-meme);
     font-size: calc(var(--fuente) * 1cqw);
     line-height: 1;
-    color: #fff;
+    color: var(--meme-texto);
     text-transform: uppercase;
     letter-spacing: var(--guiado);
     text-align: center;
-    -webkit-text-stroke: 0.11em #000;
+    -webkit-text-stroke: 0.11em var(--meme-borde);
     paint-order: stroke fill;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 55%);
+    text-shadow: 0 1px 2px var(--meme-sombra);
     pointer-events: none;
   }
 
@@ -166,7 +166,7 @@ const resumenOculto =
     flex: none;
     font-size: 1.5em;
     line-height: 1;
-    box-shadow: 0 0 0 0.055em #000;
+    box-shadow: 0 0 0 0.055em var(--meme-borde);
   }
 
   /* Nombre imposiblemente largo: se parte en dos líneas antes que salirse del meme. */

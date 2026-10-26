@@ -132,11 +132,11 @@ const resumen =
     font-weight: 600;
     line-height: 1;
     font-size: 1.7cqw;
-    color: rgb(255 255 255 / 85%);
+    color: var(--marca-agua);
     text-shadow:
-      0 0 2px #000,
-      0 0 5px rgb(0 0 0 / 90%),
-      0 1px 1px #000;
+      0 0 2px var(--meme-borde),
+      0 0 5px var(--meme-sombra-fuerte),
+      0 1px 1px var(--meme-borde);
     pointer-events: none;
     white-space: nowrap;
   }
@@ -148,8 +148,8 @@ const resumen =
   .marca :global(svg) {
     width: 2.2em;
     height: auto;
-    color: rgb(255 255 255 / 85%);
-    filter: drop-shadow(0 0 1px #000);
+    color: var(--marca-agua);
+    filter: drop-shadow(0 0 1px var(--meme-borde));
   }
 
   .abajo-derecha {

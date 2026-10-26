@@ -48,7 +48,11 @@ const FUENTES =
     <meta name="twitter:image" content={imagen} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href={FUENTES} crossorigin="anonymous" />
+    <!-- Google Fonts sin bloquear el primer pintado: se baja como "print" y /fuentes.js lo activa. -->
+    <link rel="preload" as="style" href={FUENTES} crossorigin="anonymous" />
+    <link id="fuentes" rel="stylesheet" href={FUENTES} crossorigin="anonymous" media="print" />
+    <script is:inline src="/fuentes.js" async></script>
+    <noscript><link rel="stylesheet" href={FUENTES} crossorigin="anonymous" /></noscript>
     <slot name="head" />
   </head>
   <body>
