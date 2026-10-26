@@ -1,0 +1,28 @@
+---
+// Franja de guilloché: líneas onduladas entrelazadas, como en un billete. Decorativa.
+const ondas = [0, 1, 2, 3].map((i) => {
+  const fase = i * 6;
+  let d = `M ${-fase} 12`;
+  for (let x = -fase; x < 640; x += 24) d += ` q 6 ${i % 2 ? -10 : 10} 12 0 t 12 0`;
+  return d;
+});
+---
+
+<svg class="guilloche" viewBox="0 0 600 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  {ondas.map((d) => <path d={d} />)}
+</svg>
+
+<style>
+  .guilloche {
+    display: block;
+    width: 100%;
+    height: 24px;
+    fill: none;
+    stroke: var(--guilloche);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .guilloche path {
+    vector-effect: non-scaling-stroke;
+  }
+</style>

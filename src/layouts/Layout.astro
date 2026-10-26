@@ -1,23 +1,201 @@
+---
+import "../styles/tokens.css";
+import "flag-icons/css/flag-icons.min.css";
+import Guilloche from "../components/Guilloche.astro";
+import Isotipo from "../components/Isotipo.astro";
+import Lema from "../components/Lema.astro";
+import { URL_SITIO } from "../config.ts";
+import { modelo } from "../lib/datos.ts";
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  /** Ruta de la imagen og:image (1200×630), p. ej. "/og/victima.png". */
+  og?: string;
+  /** Ruta canónica, p. ej. "/victima". */
+  ruta?: string;
+}
+
+const { titulo, descripcion, og = "/og/inicio.png", ruta = Astro.url.pathname } = Astro.props;
+const canonica = new URL(ruta, URL_SITIO).href;
+const imagen = new URL(og, URL_SITIO).href;
+const FUENTES =
+  "https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@700;800;900&family=Martian+Mono:wght@400;600&display=swap";
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="La Remontada" />
+    <meta property="og:locale" content="es_VE" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:image" content={imagen} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descripcion} />
+    <meta name="twitter:image" content={imagen} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={FUENTES} crossorigin="anonymous" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <header class="encabezado">
+      <div class="encabezado-fila">
+        <a class="logotipo" href="/" aria-label="La Remontada, inicio">
+          <span class="logotipo-la">LA</span>
+          <span class="logotipo-remontada">
+            <Isotipo class="logotipo-isotipo" />
+            REMONTADA
+          </span>
+        </a>
+        <p class="serie" aria-label={`Número de serie ${modelo.serie}`}>{modelo.serie}</p>
+      </div>
+      <Lema puesto={modelo.venezuela.puesto} texto={modelo.lema} />
+      <Guilloche />
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <Guilloche />
+      <p>
+        Sitio de humor. Los números son reales; la euforia, no tanto.
+        <a href="/ranking/numeros#fuentes">Fuentes</a>
+      </p>
+    </footer>
+  </body>
 </html>
 
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: calc(var(--ancho-meme) + 2rem);
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  a {
+    color: var(--azul);
+  }
+  img,
+  svg {
+    max-width: 100%;
+  }
+  .visualmente-oculto {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
+
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  .saltar {
+    position: absolute;
+    left: 0.5rem;
+    top: -3rem;
+    z-index: 10;
+    background: var(--papel-2);
+    color: var(--tinta);
+    padding: 0.75rem 1rem;
+    border: var(--borde) solid var(--tinta);
+    border-radius: var(--radio);
+  }
+  .saltar:focus {
+    top: 0.5rem;
+  }
+  .encabezado {
+    width: 100%;
+    max-width: calc(var(--ancho-meme) + 2rem);
+    margin: 0 auto;
+    padding: 0.75rem 1rem 0;
+  }
+  .encabezado-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .logotipo {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.3em;
+    min-height: 44px;
+    color: var(--tinta);
+    text-decoration: none;
+    font: 800 var(--t-20) / 1 var(--f-titulo);
+    letter-spacing: 0.02em;
+  }
+  .logotipo-remontada {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .logotipo :global(.logotipo-isotipo) {
+    width: 2.4em;
+    height: auto;
+    color: var(--azul);
+    margin-bottom: 0.05em;
+  }
+  .serie {
+    margin: 0;
+    font: 400 11px / 1.2 var(--f-datos);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--guiado);
+    color: var(--tinta-suave);
+    white-space: nowrap;
+  }
+  .encabezado :global(.lema) {
+    margin: 0.25rem 0 0.4rem;
+  }
+  .pie {
+    width: 100%;
+    max-width: calc(var(--ancho-meme) + 2rem);
+    margin: 2rem auto 0;
+    padding: 0 1rem 1.5rem;
+    font-size: var(--t-14);
+    color: var(--tinta-suave);
+  }
+  .pie p {
+    margin: 0.75rem 0 0;
+  }
+  .pie a {
+    display: inline-block;
+    padding: 0.75rem 0.25rem;
+    margin: -0.75rem 0;
+  }
 </style>

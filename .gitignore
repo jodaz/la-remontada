@@ -1,5 +1,11 @@
 # build output
 dist/
+dist-*/
+dist-capturas/
+
+# datos crudos del FMI y resumen del PR (se archivan en MEGA S4, no en git)
+crudos/
+resumen.md
 
 # generated types
 .astro/

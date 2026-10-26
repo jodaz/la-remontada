@@ -1,0 +1,61 @@
+---
+// "Puesto {n} y subiendo." El número gira una vez como un contador mecánico (< 1 s).
+interface Props {
+  puesto: number;
+  texto: string; // el lema completo, ya armado en src/lib/notas
+}
+const { puesto, texto } = Astro.props;
+const [antes, despues] = texto.split(String(puesto));
+const digitos = String(puesto).split("").map(Number);
+const ruedas = Array.from({ length: 10 }, (_, i) => i);
+---
+
+<p class="lema" aria-label={texto}>
+  <span aria-hidden="true">{antes}</span><span class="contador-mecanico" aria-hidden="true">
+    {
+      digitos.map((d) => (
+        <span class="rueda">
+          <span class="tira" style={`--d: ${d}`}>
+            {ruedas.map((n) => (
+              <span>{n}</span>
+            ))}
+          </span>
+        </span>
+      ))
+    }
+  </span><span aria-hidden="true">{despues}</span>
+</p>
+
+<style>
+  .lema {
+    margin: 0;
+    font: 700 var(--t-14) / 1.2 var(--f-titulo);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .contador-mecanico {
+    display: inline-flex;
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta);
+  }
+  .rueda {
+    display: inline-block;
+    height: 1.2em;
+    overflow: hidden;
+  }
+  .tira {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--d) * -1.2em));
+    animation: girar 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .tira span {
+    height: 1.2em;
+  }
+  @keyframes girar {
+    from {
+      transform: translateY(0);
+    }
+  }
+</style>
