@@ -28,12 +28,13 @@ pnpm exec playwright install --with-deps chromium   # una vez, para build y capt
 | Comando | Qué hace |
 | --- | --- |
 | `pnpm dev` | Servidor de desarrollo en `localhost:4321`. Para agentes: `astro dev --background`. |
-| `pnpm build` | `astro build` + og:image con Playwright + `_headers` y `dist/data/`. Es el build de producción. |
+| `pnpm build` | `astro build` + `_headers` y `dist/data/`. Es el build de producción (el de Cloudflare). |
 | `pnpm build:astro` | Solo `astro build`, sin capturas ni encabezados. Para iterar rápido. |
 | `pnpm preview` | Sirve `dist/` localmente. |
 | `pnpm test` | Pruebas unitarias de `src/lib` con Vitest. |
 | `pnpm check` | `astro check` (tipos de archivos `.astro`). |
-| `pnpm capturas` | Genera `dist/og/*.png` y las capturas móviles diarias en `dist-capturas/`. |
+| `pnpm capturas` | Genera `dist/og/*.png` y las capturas móviles en `dist-capturas/`. |
+| `pnpm capturas:og` | Igual, pero escribe las og en `public/og/` para versionarlas. |
 | `pnpm headers` | Genera `dist/_headers` y copia `data/*.json` a `dist/data/`. |
 | `pnpm headers:verificar` | Carga el build en Playwright y falla si hay violaciones de CSP. |
 | `pnpm revision` | Capturas de todas las rutas en 360/400/768/1280 px, claro y oscuro. Falla por desborde horizontal o etiquetas fuera del meme. |
@@ -41,7 +42,7 @@ pnpm exec playwright install --with-deps chromium   # una vez, para build y capt
 | `pnpm actualizar-fmi` | Descarga, valida y escribe `data/pib.json`. Ver abajo. |
 
 `LA_REMONTADA_HOY=AAAA-MM-DD pnpm build` fija la fecha de compilación (útil para
-pruebas reproducibles y para el nombre de la carpeta de capturas diarias).
+pruebas reproducibles y para el nombre de la carpeta de capturas).
 
 ## Estructura
 
@@ -112,29 +113,28 @@ país; el resultado (`data/paises.json`) se revisa y se versiona.
 
 ## Publicación
 
-**Decisión:** el build y el despliegue corren en GitHub Actions, no en el build
-de Cloudflare Pages. Las `og:image` se generan con Playwright/Chromium y la
-imagen de build de Pages no trae navegador. Por eso el proyecto de Pages debe
-ser de **subida directa** (sin integración Git) o tener desactivados los
-despliegues automáticos de producción; si no, cada push a `main` competiría con
-el despliegue de Actions.
+**Decisión:** Cloudflare Pages compila y despliega con su integración Git
+(comando `pnpm build`, salida `dist`, variable `NODE_VERSION=22.23.4`). Su imagen
+de build no trae Chromium, así que las `og:image` no se generan allí: se
+generan en Actions y se **versionan en `public/og/`**, de donde Astro las copia
+al build.
 
 Flujo (`.github/workflows/publicar.yml`):
 
-1. Push a `main`, ejecución manual o llamada del cron diario.
-2. Instala dependencias y Chromium, corre pruebas y compila con
-   `CAPTURAS_ESTRICTO=1` (deben existir las cinco rutas).
-3. `pnpm build` genera `dist/og/*.png` (1200×630), copia `data/*.json` a
-   `dist/data/` y escribe `dist/_headers`.
-4. Verifica la CSP cargando el build en Playwright: cero violaciones.
-5. Archiva las capturas móviles del día en MEGA S4
-   (`meme-diario/AAAA-MM-DD/`) y las sube como artefacto.
-6. Despliega con
-   `npx wrangler@4 pages deploy dist --project-name laremontada --branch main`.
+1. Push a `main`, ejecución manual o llamada del cron mensual.
+2. Instala dependencias y Chromium, corre pruebas y compila (`pnpm build`:
+   `astro build` + `_headers` + `dist/data/`).
+3. Verifica la CSP cargando el build en Playwright: cero violaciones.
+4. `pnpm capturas:og` (con `CAPTURAS_ESTRICTO=1`) escribe `public/og/*.png`
+   (1200×630) y las capturas móviles del día en `dist-capturas/`.
+5. Archiva las capturas móviles en MEGA S4 (`meme-diario/AAAA-MM-DD/`) y las
+   sube como artefacto.
+6. Si las `og:image` cambiaron, las commitea a `main` y Cloudflare compila por
+   el push. Si no, llama al deploy hook (`CF_DEPLOY_HOOK`) para recompilar.
 
-`.github/workflows/recompilar-diario.yml` llama a **Publicar** todos los días a
-las 09:00 UTC (05:00 en Venezuela), para que el meme cambie el día en que cae un
-país.
+`.github/workflows/recompilar-mensual.yml` llama a **Publicar** el día 1 de cada
+mes a las 09:00 UTC (05:00 en Venezuela), para que el meme cambie cuando cae un
+país. Las series son mensuales: el ranking no cambia entre dos meses.
 
 ### Analítica
 
@@ -157,7 +157,7 @@ corta de `/*` con `! Cache-Control` y fijan la suya):
 | Ruta | Caché |
 | --- | --- |
 | `/_astro/*` | `max-age=31536000, immutable` |
-| `/memes/*` y `/og/*` | `max-age=86400` (la og se regenera a diario) |
+| `/memes/*` y `/og/*` | `max-age=86400` (la og se regenera en cada recompilación) |
 | `/data/*` | `max-age=300` |
 | resto (HTML) | `max-age=0, must-revalidate` |
 

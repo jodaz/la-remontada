@@ -1,7 +1,10 @@
 // Genera las imágenes og:image (1200×630) de cada ruta y las capturas móviles
-// diarias de los memes. Se ejecuta después de `astro build`.
+// de los memes en cada ejecución. Se ejecuta después de `astro build`.
 //
-// Uso: node scripts/capturas-og.ts [--dist dist] [--capturas dist-capturas] [--estricto]
+// Uso: node scripts/capturas-og.ts [--dist dist] [--og dist/og] [--capturas dist-capturas] [--estricto]
+//
+// `--og public/og` deja los PNG donde Astro los copia al build, para versionarlos:
+// el build de Cloudflare Pages no trae Chromium y no puede generarlos.
 //
 // `--estricto` (o CAPTURAS_ESTRICTO=1) falla si falta alguna de las cinco rutas.
 // Sin esa opción avisa y sigue, para no bloquear mientras se construyen páginas.
@@ -134,12 +137,14 @@ async function principal() {
   const { values } = parseArgs({
     options: {
       dist: { type: "string", default: "dist" },
+      og: { type: "string" },
       capturas: { type: "string", default: "dist-capturas" },
       estricto: { type: "boolean", default: process.env.CAPTURAS_ESTRICTO === "1" },
     },
   });
   const dist = resolve(RAIZ, values.dist);
   if (!existsSync(dist)) throw new Error(`No existe ${dist}. Ejecuta \`astro build\` antes.`);
+  const carpetaOg = values.og ? resolve(RAIZ, values.og) : join(dist, "og");
   const capturas = resolve(RAIZ, values.capturas);
   const fecha = process.env.LA_REMONTADA_HOY?.trim() || new Date().toISOString().slice(0, 10);
 
@@ -151,7 +156,7 @@ async function principal() {
     console.warn(`⚠ ${aviso}`);
   }
 
-  mkdirSync(join(dist, "og"), { recursive: true });
+  mkdirSync(carpetaOg, { recursive: true });
   mkdirSync(join(capturas, fecha), { recursive: true });
 
   const { chromium } = await import("playwright");
@@ -177,7 +182,7 @@ async function principal() {
       await esperarPagina(page, 1_000);
       const informe = await encuadrar(page);
       await page.evaluate(() => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo))));
-      const destino = join(dist, "og", `${entrada.og ?? entrada.slug}.png`);
+      const destino = join(carpetaOg, `${entrada.og ?? entrada.slug}.png`);
       await page.screenshot({ path: destino, animations: "disabled" });
       await contexto.close();
 
@@ -194,7 +199,7 @@ async function principal() {
       }
     }
 
-    // Capturas móviles diarias de los dos memes, para archivar en MEGA S4.
+    // Capturas móviles de los dos memes, para archivar en MEGA S4.
     for (const entrada of existentes.filter((ruta) => ruta.ruta === "/victima" || ruta.ruta === "/ranking")) {
       const contexto = await navegador.newContext({
         viewport: { width: 400, height: 900 },

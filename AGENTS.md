@@ -36,7 +36,7 @@ memes/            puertas.json, escalera.json            (label positions, read 
                   preview.html                           (calibration tool, not shipped)
 public/memes/     puertas.jpg (640×357), escalera.jpg (777×1100)  (exist)
 scripts/          actualizar-fmi, capturas-og
-.github/workflows datos-fmi.yml, recompilar-diario.yml
+.github/workflows datos-fmi.yml, recompilar-mensual.yml
 docs/             PRD.md, referencia/inspiracion-tweet.png
 ```
 
@@ -51,7 +51,7 @@ Code identifiers, file names and all UI copy are in Spanish, following the PRD.
 
 `interpolar`, `ranking` and `victimas` require unit tests. No test runner is installed yet, so add one when you build these.
 
-Months after the current one are **projection** and must look different everywhere: striped bars and the "PROYECCIÓN" stamp. The site rebuilds daily, so "today" is the build date.
+Months after the current one are **projection** and must look different everywhere: striped bars and the "PROYECCIÓN" stamp. The site rebuilds monthly (the series are monthly, so the ranking only changes at a month boundary), so "today" is the build date.
 
 ### Memes
 
@@ -111,8 +111,8 @@ The site is styled like a bolívar banknote, with the frame kept quiet so the me
 ## Data updates and automation
 
 - `datos-fmi.yml` downloads the IMF WEO file and validates it (~190 countries, Venezuela present, no absurd jumps). It then opens a PR with a summary ("Venezuela pasa del puesto X al Y; nueva próxima víctima: Z"). It must **never publish without approval**.
-- `recompilar-diario.yml` rebuilds daily so the meme changes on the day a country falls.
-- Raw IMF files and daily meme screenshots are archived in MEGA S4. Its credentials live only in GitHub Actions secrets.
+- `recompilar-mensual.yml` rebuilds on the 1st of each month so the meme changes when a country falls.
+- Raw IMF files and meme screenshots of each rebuild are archived in MEGA S4. Its credentials live only in GitHub Actions secrets.
 - The current edition is the WEO of October 2026. Use only IMF data, never BCV figures.
 
 ## Delivery
