@@ -131,7 +131,8 @@ const FUENTES =
   .saltar {
     position: absolute;
     left: 0.5rem;
-    top: -3rem;
+    top: 0.5rem;
+    transform: translateY(calc(-100% - 1rem));
     z-index: 10;
     background: var(--papel-2);
     color: var(--tinta);
@@ -140,7 +141,7 @@ const FUENTES =
     border-radius: var(--radio);
   }
   .saltar:focus {
-    top: 0.5rem;
+    transform: none;
   }
   .encabezado {
     width: 100%;
