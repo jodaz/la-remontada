@@ -1,0 +1,9 @@
+---
+// La nota de realidad: una o dos líneas secas como letra pequeña del billete.
+interface Props {
+  texto: string;
+}
+const { texto } = Astro.props;
+---
+
+<p class="letra-pequena">{texto}</p>

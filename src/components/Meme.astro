@@ -1,0 +1,187 @@
+---
+// El meme: imagen base + etiquetas HTML + marca de agua, dentro del marco de billete.
+// El marco y los números de serie quedan fuera de `.meme`, que es lo único que se descarga.
+import Etiqueta from "./Etiqueta.astro";
+import Isotipo from "./Isotipo.astro";
+import { SITIO } from "../config.ts";
+import { memes, modelo } from "../lib/datos.ts";
+
+interface Props {
+  meme: "puertas" | "escalera";
+}
+
+const { meme } = Astro.props;
+const config = memes[meme];
+const etiquetas = modelo.etiquetas[meme];
+
+// Texto alternativo corto: describe la escena, no los datos (las etiquetas ya son texto).
+const ALT = {
+  puertas:
+    "La muerte toca la puerta de la próxima víctima; las puertas anteriores están ensangrentadas.",
+  escalera:
+    "Un atleta celebra con champaña en un escalón bajo de una escalera llena de medallistas.",
+} as const;
+
+const pais = (rol: string, indice?: number) =>
+  etiquetas.find((e) => e.rol === rol && (indice === undefined || e.indice === indice));
+
+const proxima = pais("proxima");
+const ultimaVictima = pais("victima", 1);
+const primero = pais("primero");
+const ultimaAbajo = pais("abajo", 1);
+const arriba = etiquetas.filter((e) => e.rol === "arriba");
+const puestosArriba = arriba
+  .map((e) => e.puesto)
+  .filter((p): p is number => p != null);
+const rangoArriba = puestosArriba.length
+  ? `los puestos ${Math.min(...puestosArriba)} a ${Math.max(...puestosArriba)}`
+  : "los escalones de arriba";
+
+// Resumen para lectores de pantalla: quién está dónde, todo desde el modelo.
+const resumen =
+  meme === "puertas"
+    ? `Meme de las puertas: la muerte toca la puerta de ${proxima?.pais?.nombre}; ${ultimaVictima?.pais?.nombre} fue la última víctima; ${modelo.venezuela.pais.nombre} aparece en el puesto ${modelo.venezuela.puesto}.`
+    : `Meme de la escalera: ${primero?.pais?.nombre} está en el puesto ${primero?.puesto}; ${rangoArriba} ocupan los escalones de arriba; ${modelo.venezuela.pais.nombre} celebra en el puesto ${modelo.venezuela.puesto}; ${ultimaAbajo?.pais?.nombre} está abajo, en el puesto ${ultimaAbajo?.puesto}.`;
+---
+
+<figure class:list={["marco-billete", "marco-meme"]} data-figura={meme}>
+  <span class="serie-marco serie-arriba" aria-hidden="true">{modelo.serie}</span>
+
+  <div class="meme" data-meme={meme} data-ancho={config.ancho} data-alto={config.alto}>
+    <img
+      src={`/memes/${config.imagen}`}
+      width={config.ancho}
+      height={config.alto}
+      alt={ALT[meme]}
+      fetchpriority="high"
+      decoding="async"
+    />
+    {etiquetas.map((etiqueta) => <Etiqueta etiqueta={etiqueta} />)}
+    <div class:list={["marca", config.marca.esquina]} data-marca>
+      <Isotipo />
+      <span>{SITIO}</span>
+    </div>
+  </div>
+
+  <span class="serie-marco serie-abajo" aria-hidden="true">{modelo.serie}</span>
+  <figcaption class="visualmente-oculto">{resumen}</figcaption>
+</figure>
+
+<script>
+  import "../scripts/etiquetas.ts";
+</script>
+
+<style>
+  .marco-meme {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 1.6rem 0.5rem;
+  }
+
+  /* La escalera es muy alta: en escritorio se limita el alto para que no domine la pantalla. */
+  @media (min-width: 600px) {
+    .marco-meme[data-figura="escalera"] {
+      max-width: min(var(--ancho-meme), calc(78vh * 777 / 1100));
+    }
+  }
+
+  .serie-marco {
+    position: absolute;
+    font: 400 11px / 1.2 var(--f-datos);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--guiado);
+    color: var(--tinta-suave);
+    white-space: nowrap;
+  }
+  .serie-arriba {
+    top: 0.35rem;
+    left: 0.6rem;
+  }
+  .serie-abajo {
+    bottom: 0.35rem;
+    right: 0.6rem;
+  }
+
+  .meme {
+    position: relative;
+    width: 100%;
+    container-type: inline-size;
+    line-height: 0;
+  }
+  .meme img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .marca {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--f-datos);
+    font-weight: 600;
+    line-height: 1;
+    font-size: 1.7cqw;
+    color: rgb(255 255 255 / 85%);
+    text-shadow:
+      0 0 2px #000,
+      0 0 5px rgb(0 0 0 / 90%),
+      0 1px 1px #000;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  @supports not (container-type: inline-size) {
+    .marca {
+      font-size: calc(var(--ancho-meme-px, 400px) * 1.7 / 100);
+    }
+  }
+  .marca :global(svg) {
+    width: 2.2em;
+    height: auto;
+    color: rgb(255 255 255 / 85%);
+    filter: drop-shadow(0 0 1px #000);
+  }
+
+  .abajo-derecha {
+    right: 2%;
+    bottom: 2%;
+  }
+  .abajo-izquierda {
+    left: 2%;
+    bottom: 2%;
+  }
+  .arriba-derecha {
+    right: 2%;
+    top: 2%;
+  }
+  .arriba-izquierda {
+    left: 2%;
+    top: 2%;
+  }
+</style>
+
+<style is:global>
+  /* La pantalla del meme, compartida por /, /victima y /ranking. */
+  .pantalla-meme {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .pantalla-meme .marco-meme {
+    align-self: center;
+  }
+  .pantalla-meme .boton-descarga,
+  .pantalla-meme .boton-numeros {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .pantalla-meme .letra-pequena {
+    margin: 0;
+  }
+</style>

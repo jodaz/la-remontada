@@ -1,0 +1,24 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Meme from "../../components/Meme.astro";
+import BotonDescarga from "../../components/BotonDescarga.astro";
+import NotaRealidad from "../../components/NotaRealidad.astro";
+import { memes, modelo } from "../../lib/datos.ts";
+
+const MEME = "escalera" as const;
+const numeros = `${memes[MEME].ruta}/numeros`;
+---
+
+<Layout
+  titulo="La escalera de medallas · La Remontada"
+  descripcion={modelo.notas.escalera}
+  og="/og/ranking.png"
+  ruta="/ranking"
+>
+  <section class="pantalla-meme">
+    <Meme meme={MEME} />
+    <BotonDescarga meme={MEME} />
+    <NotaRealidad texto={modelo.notas.escalera} />
+    <a class="boton-numeros" href={numeros}>Ver los números</a>
+  </section>
+</Layout>

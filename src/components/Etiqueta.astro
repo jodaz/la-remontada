@@ -1,0 +1,178 @@
+---
+// Una etiqueta del meme: bandera, puesto, nombre y/o rótulo, ubicada en porcentajes
+// sobre la imagen. El tamaño de letra sale de `fuente` (% del ancho del meme).
+import type { EtiquetaResuelta } from "../lib/memes.ts";
+
+interface Props {
+  etiqueta: EtiquetaResuelta;
+}
+
+const { etiqueta: et } = Astro.props;
+
+/**
+ * Ancho medio de un carácter en mayúsculas, con el guiado, en em. Es deliberadamente
+ * conservador (Anton es más estrecha) para que sin JS el texto quepa aunque el navegador
+ * use la fuente de respaldo. Con JS, el script mide y ajusta al tamaño real.
+ */
+const ANCHO_CARACTER = 0.68;
+
+function escalaInicial(texto: string, base: number): number {
+  const estimado = Math.max(texto.length, 1) * ANCHO_CARACTER * base * et.fuente;
+  const ajuste = et.ancho / estimado;
+  return Math.max(0.5, Math.min(1, Math.floor(ajuste * 20) / 20));
+}
+
+const esCelebra =
+  et.rol === "venezuela" && et.muestra.includes("puesto") && et.muestra.includes("nombre");
+
+const rotulo = et.rotulo ?? [];
+// El puesto y el nombre nunca se escriben a mano: salen del modelo.
+const linea = [
+  et.muestra.includes("puesto") && et.puesto != null ? `#${et.puesto}` : "",
+  et.muestra.includes("nombre") ? (et.nombre ?? "") : "",
+]
+  .filter(Boolean)
+  .join(" ");
+
+// Cuando la etiqueta solo muestra "#71", el lector de pantalla necesita el país.
+const soloPuesto = et.muestra.includes("puesto") && !et.muestra.includes("nombre");
+const resumenOculto =
+  (soloPuesto || esCelebra) && et.pais
+    ? `${et.pais.nombre}, puesto ${et.puesto}`
+    : "";
+---
+
+<div
+  class:list={["etiqueta", et.ancla, { celebra: esCelebra }]}
+  style={`left:${et.x}%;top:${et.y}%;--ancho-etiqueta:${et.ancho}%;--fuente:${et.fuente}`}
+  data-etiqueta={et.id}
+>
+  {
+    rotulo.map((texto) => (
+      <span class="rotulo-meme" style={`--ajuste:${escalaInicial(texto, 0.72)}`}>
+        {texto}
+      </span>
+    ))
+  }
+
+  {
+    esCelebra ? (
+      <span class="fila">
+        {et.muestra.includes("bandera") && et.pais && (
+          <span class={`fi fi-${et.pais.iso2}`} aria-hidden="true" />
+        )}
+        <span
+          class="txt puesto-grande"
+          style={`--ajuste:${escalaInicial(`#${et.puesto}`, 2.1)}`}
+          aria-hidden={resumenOculto ? "true" : undefined}
+        >
+          {`#${et.puesto}`}
+        </span>
+      </span>
+    ) : (
+      et.muestra.includes("bandera") && et.pais && (
+        <span class={`fi fi-${et.pais.iso2}`} aria-hidden="true" />
+      )
+    )
+  }
+
+  {
+    esCelebra ? (
+      <span
+        class="txt nombre-venezuela"
+        style={`--ajuste:${escalaInicial(et.nombre ?? "", 0.95)}`}
+        aria-hidden={resumenOculto ? "true" : undefined}
+      >
+        {et.nombre}
+      </span>
+    ) : (
+      linea && (
+        <span
+          class="txt"
+          style={`--ajuste:${escalaInicial(linea, 1)}`}
+          aria-hidden={resumenOculto ? "true" : undefined}
+        >
+          {linea}
+        </span>
+      )
+    )
+  }
+
+  {resumenOculto && <span class="visualmente-oculto">{resumenOculto}</span>}
+</div>
+
+<style>
+  .etiqueta {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.12em;
+    width: max-content;
+    max-width: var(--ancho-etiqueta);
+    font-family: var(--f-meme);
+    font-size: calc(var(--fuente) * 1cqw);
+    line-height: 1;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: var(--guiado);
+    text-align: center;
+    -webkit-text-stroke: 0.11em #000;
+    paint-order: stroke fill;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 55%);
+    pointer-events: none;
+  }
+
+  /* iOS 15 no entiende cqw: el script deja el ancho del meme en --ancho-meme-px. */
+  @supports not (container-type: inline-size) {
+    .etiqueta {
+      font-size: calc(var(--ancho-meme-px, 400px) * var(--fuente) / 100);
+    }
+  }
+
+  .abajo {
+    transform: translate(-50%, -100%);
+  }
+  .arriba {
+    transform: translate(-50%, 0);
+  }
+
+  .txt,
+  .rotulo-meme {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    font-size: calc(var(--base, 1) * var(--ajuste, 1) * 1em);
+  }
+
+  .rotulo-meme {
+    --base: 0.72;
+  }
+  .puesto-grande {
+    --base: 2.1;
+  }
+  .nombre-venezuela {
+    --base: 0.95;
+  }
+
+  .fila {
+    display: flex;
+    align-items: center;
+    gap: 0.14em;
+    max-width: 100%;
+  }
+
+  .etiqueta :global(.fi) {
+    flex: none;
+    font-size: 1.5em;
+    line-height: 1;
+    box-shadow: 0 0 0 0.055em #000;
+  }
+
+  /* Nombre imposiblemente largo: se parte en dos líneas antes que salirse del meme. */
+  .envolver {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+</style>

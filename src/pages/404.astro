@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { memes } from "../lib/datos.ts";
+---
+
+<Layout
+  titulo="Página no encontrada · La Remontada"
+  descripcion="Esta página no existe. Los memes de La Remontada siguen en pie."
+>
+  <section class="no-encontrada">
+    <h1>Esta página se cayó del ranking.</h1>
+    <p>No existe o cambió de dirección. La remontada sigue por aquí:</p>
+    <p class="enlaces">
+      <a class="boton-numeros" href={memes.puertas.ruta}>La muerte tocando puertas</a>
+      <a class="boton-numeros" href={memes.escalera.ruta}>La escalera de medallas</a>
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .no-encontrada {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 0;
+  }
+  .no-encontrada h1 {
+    margin: 0;
+    font-size: var(--t-40);
+  }
+  .no-encontrada p {
+    margin: 0;
+    max-width: var(--ancho-texto);
+  }
+  .enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .enlaces .boton-numeros {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+</style>

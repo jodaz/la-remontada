@@ -1,0 +1,24 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Meme from "../../components/Meme.astro";
+import BotonDescarga from "../../components/BotonDescarga.astro";
+import NotaRealidad from "../../components/NotaRealidad.astro";
+import { memes, modelo } from "../../lib/datos.ts";
+
+const MEME = "puertas" as const;
+const numeros = `${memes[MEME].ruta}/numeros`;
+---
+
+<Layout
+  titulo="La muerte tocando puertas · La Remontada"
+  descripcion={modelo.notas.puertas}
+  og="/og/victima.png"
+  ruta="/victima"
+>
+  <section class="pantalla-meme">
+    <Meme meme={MEME} />
+    <BotonDescarga meme={MEME} />
+    <NotaRealidad texto={modelo.notas.puertas} />
+    <a class="boton-numeros" href={numeros}>Ver los números</a>
+  </section>
+</Layout>
