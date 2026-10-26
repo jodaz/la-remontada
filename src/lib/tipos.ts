@@ -42,7 +42,15 @@ export interface EtiquetaConfig {
 export interface MemeConfig {
   meme: "puertas" | "escalera";
   ruta: string;
+  /** JPG original, de archivo y respaldo. */
   imagen: string;
+  /** WebP que sirve la página: mismo tamaño y encuadre, menos peso. */
+  imagenWebp: string;
+  /** Variante pequeña para la miniatura de las páginas de números. */
+  imagenMini: string;
+  /** Candidatos responsive de la imagen grande (opcional). */
+  imagenSrcset?: string;
+  imagenSizes?: string;
   ancho: number;
   alto: number;
   etiquetas: EtiquetaConfig[];

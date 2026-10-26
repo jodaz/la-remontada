@@ -26,12 +26,21 @@ const notas = { puertas: modelo.notas.puertas, escalera: modelo.notas.escalera }
         const imagen = document.createElement("link");
         imagen.rel = "preload";
         imagen.as = "image";
-        imagen.href = `/memes/${raiz.dataset.meme}.jpg`;
+        imagen.href = `/memes/${raiz.dataset.meme}.webp`;
+        imagen.type = "image/webp";
+        // La escalera tiene una variante de 640 px para celular; el preload debe
+        // elegir la misma que elegirá el <img>, o se bajan las dos.
+        if (raiz.dataset.meme === "escalera") {
+          imagen.setAttribute("imagesrcset", "/memes/escalera-640.webp 640w, /memes/escalera.webp 777w");
+          imagen.setAttribute("imagesizes", "(max-width: 600px) 360px, 720px");
+        }
         imagen.setAttribute("fetchpriority", "high");
         document.head.append(imagen);
       }
     </script>
   </Fragment>
+
+  <h1 class="visualmente-oculto">La Remontada: memes del ranking del PIB</h1>
 
   {
     MEMES.map((meme) => (

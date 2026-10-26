@@ -8,6 +8,7 @@ import { scaleLinear } from "d3-scale";
 import { nombreMes } from "../lib/meses.ts";
 import {
   etiquetaMetrica,
+  listaCaidas,
   valorDeMetrica,
   ventanaAlrededor,
 } from "../lib/graficos.ts";
@@ -251,9 +252,9 @@ export function iniciarCarrera(): void {
       avisoTexto!.textContent = "";
       return false;
     }
-    const caida = caidas[0];
-    const nombre = datos.paises[caida.iso]?.[2] ?? caida.iso;
-    avisoTexto!.textContent = `Cae ${nombre} · ${nombreMes(caida.mes)}`;
+    // Un mismo mes puede tumbar varios países: se anuncian todos juntos.
+    const nombres = caidas.map((caida) => datos.paises[caida.iso]?.[2] ?? caida.iso);
+    avisoTexto!.textContent = `${listaCaidas(nombres)} · ${nombreMes(mes)}`;
     aviso!.hidden = false;
     return true;
   }

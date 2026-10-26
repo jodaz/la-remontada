@@ -1,6 +1,7 @@
 ---
+import "../styles/fuentes.css";
 import "../styles/tokens.css";
-import "flag-icons/css/flag-icons.min.css";
+import "../styles/banderas.css";
 import Guilloche from "../components/Guilloche.astro";
 import Isotipo from "../components/Isotipo.astro";
 import Lema from "../components/Lema.astro";
@@ -14,13 +15,20 @@ interface Props {
   og?: string;
   /** Ruta canónica, p. ej. "/victima". */
   ruta?: string;
+  /** La página trae su propia sección #fuentes: el enlace del pie apunta ahí. */
+  fuentesLocales?: boolean;
 }
 
-const { titulo, descripcion, og = "/og/inicio.png", ruta = Astro.url.pathname } = Astro.props;
+const {
+  titulo,
+  descripcion,
+  og = "/og/inicio.png",
+  ruta = Astro.url.pathname,
+  fuentesLocales = false,
+} = Astro.props;
 const canonica = new URL(ruta, URL_SITIO).href;
 const imagen = new URL(og, URL_SITIO).href;
-const FUENTES =
-  "https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@700;800;900&family=Martian+Mono:wght@400;600&display=swap";
+const enlaceFuentes = fuentesLocales ? "#fuentes" : "/ranking/numeros#fuentes";
 ---
 
 <!doctype html>
@@ -32,6 +40,9 @@ const FUENTES =
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonica} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Solo Anton: es la fuente de las etiquetas del meme, lo único que compite
+         con la imagen por el LCP. Big Shoulders se carga con el resto del CSS. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/anton-v1-latin.woff2" crossorigin />
     <meta name="color-scheme" content="light dark" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="La Remontada" />
@@ -46,13 +57,6 @@ const FUENTES =
     <meta name="twitter:title" content={titulo} />
     <meta name="twitter:description" content={descripcion} />
     <meta name="twitter:image" content={imagen} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Google Fonts sin bloquear el primer pintado: se baja como "print" y /fuentes.js lo activa. -->
-    <link rel="preload" as="style" href={FUENTES} crossorigin="anonymous" />
-    <link id="hoja-fuentes" rel="stylesheet" href={FUENTES} crossorigin="anonymous" media="print" />
-    <script is:inline src="/fuentes.js" async></script>
-    <noscript><link rel="stylesheet" href={FUENTES} crossorigin="anonymous" /></noscript>
     <slot name="head" />
   </head>
   <body>
@@ -79,7 +83,7 @@ const FUENTES =
       <Guilloche />
       <p>
         Sitio de humor. Los números son reales; la euforia, no tanto.
-        <a href="/ranking/numeros#fuentes">Fuentes</a>
+        <a href={enlaceFuentes}>Fuentes</a>
       </p>
       <p class="creditos">
         Hecho por <a href="https://vanguarddevs.com">vanguarddevs.com</a>. Ningún economista fue consultado; dos cafés, sí.

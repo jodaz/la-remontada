@@ -3,11 +3,15 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+  build: {
+    // El CSS crítico viaja dentro del HTML: una petición menos antes del primer
+    // pintado. Cloudflare comprime el HTML, así que el peso extra es mínimo.
+    inlineStylesheets: "always",
+  },
   vite: {
     build: {
-      // flag-icons trae ~270 banderas SVG. Si Vite las incrusta como data URI,
-      // el CSS pasa de 400 KB y se descargan todas; con 0 quedan como archivos
-      // y solo baja la bandera que la página usa (presupuesto de < 600 KB).
+      // Los assets importados quedan como archivos, no como data URI: se
+      // cachean aparte y solo baja lo que la página usa.
       assetsInlineLimit: 0,
     },
   },

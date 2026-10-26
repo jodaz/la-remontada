@@ -7,6 +7,9 @@ import { memes, modelo } from "../../lib/datos.ts";
 
 const MEME = "puertas" as const;
 const numeros = `${memes[MEME].ruta}/numeros`;
+const h1 = modelo.proxima
+  ? `La muerte toca puertas: la próxima víctima es ${modelo.proxima.pais.nombre}`
+  : `La muerte toca puertas: ${modelo.venezuela.pais.nombre} está en el puesto ${modelo.venezuela.puesto}`;
 ---
 
 <Layout
@@ -15,6 +18,15 @@ const numeros = `${memes[MEME].ruta}/numeros`;
   og="/og/victima.png"
   ruta="/victima"
 >
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href={`/memes/${memes[MEME].imagenWebp}`}
+    type="image/webp"
+    fetchpriority="high"
+  />
+  <h1 class="visualmente-oculto">{h1}</h1>
   <section class="pantalla-meme">
     <Meme meme={MEME} />
     <BotonDescarga meme={MEME} />

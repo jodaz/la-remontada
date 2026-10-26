@@ -146,10 +146,10 @@ const resumenOculto =
   }
 
   .abajo {
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, calc(-100% + var(--dy, 0px)));
   }
   .arriba {
-    transform: translate(-50%, 0);
+    transform: translate(-50%, var(--dy, 0px));
   }
 
   .txt,
@@ -190,8 +190,12 @@ const resumenOculto =
 
   /* Nombre imposiblemente largo: se parte en dos líneas antes que salirse del meme. */
   .envolver {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    max-height: 2em;
+    overflow: hidden;
     white-space: normal;
     overflow-wrap: anywhere;
-    text-wrap: balance;
   }
 </style>
