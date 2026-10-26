@@ -112,8 +112,21 @@ const datos: DatosLineas | null =
           set:html={JSON.stringify(datos)}
         ></script>
         <script>
-          import { iniciarLineas } from "./lineas.ts";
-          iniciarLineas();
+          // Las líneas quedan debajo del pliegue; el módulo (con D3) se pide
+          // después de que la página haya pintado su contenido principal.
+          const arrancar = () => {
+            void import("./lineas.ts").then(({ iniciarLineas }) => iniciarLineas());
+          };
+          const cuandoLibre = () => {
+            const rIC = window.requestIdleCallback;
+            if (typeof rIC === "function") {
+              rIC(arrancar, { timeout: 1200 });
+            } else {
+              window.setTimeout(arrancar, 60);
+            }
+          };
+          if (document.readyState === "complete") cuandoLibre();
+          else window.addEventListener("load", cuandoLibre, { once: true });
         </script>
       </>
     )
@@ -126,10 +139,9 @@ const datos: DatosLineas | null =
   }
   .lineas-cabecera {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 0.4rem;
   }
   .lineas-cabecera h2 {
     margin: 0;
@@ -143,6 +155,9 @@ const datos: DatosLineas | null =
     color: var(--tinta-suave);
   }
   .lineas .sello {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.6em;
     font-size: var(--t-14);
   }
   .lineas-mensaje {
@@ -159,12 +174,19 @@ const datos: DatosLineas | null =
   .lineas-tablero {
     position: relative;
     width: 100%;
-    min-height: 240px;
+    height: 240px;
+  }
+  @media (min-width: 640px) {
+    .lineas-tablero {
+      height: 340px;
+    }
   }
   .lineas-tablero svg {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     overflow: visible;
   }
   .leyenda {

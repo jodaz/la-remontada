@@ -19,6 +19,8 @@ const config = meme === "puertas" ? puertas : escalera;
     width={config.ancho}
     height={config.alto}
     alt={alt}
+    loading="eager"
+    fetchpriority="high"
     decoding="async"
   />
 </a>

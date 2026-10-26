@@ -100,8 +100,8 @@ export function iniciarCarrera(): void {
   function medir(): void {
     ancho = Math.max(280, Math.floor(tablero!.clientWidth));
     const cuantos = escritorio() ? datos.visibles.escritorio : datos.visibles.celular;
-    filaAlto = ancho < 480 ? 30 : Math.max(30, Math.min(42, Math.round(ancho / 17)));
-    alto = margen * 2 + cuantos * filaAlto;
+    alto = Math.max(200, Math.floor(tablero!.clientHeight));
+    filaAlto = (alto - margen * 2) / cuantos;
     barraAlto = Math.max(12, Math.round(filaAlto * 0.56));
     leftBarra = Math.round(ancho * 0.4);
     valorAncho = Math.round(ancho * 0.26);
@@ -110,7 +110,6 @@ export function iniciarCarrera(): void {
     svg!.setAttribute("width", String(ancho));
     svg!.setAttribute("height", String(alto));
     svg!.setAttribute("viewBox", `0 0 ${ancho} ${alto}`);
-    tablero!.style.height = `${alto}px`;
     etiquetas!.style.setProperty("--left-barra", `${leftBarra}px`);
     etiquetas!.style.setProperty("--valor-ancho", `${valorAncho}px`);
     etiquetas!.style.setProperty("--alto-fila", `${filaAlto}px`);

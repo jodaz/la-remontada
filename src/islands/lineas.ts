@@ -57,11 +57,10 @@ export function iniciarLineas(): void {
 
   function dibujar(): void {
     const ancho = Math.max(280, Math.floor(tablero!.clientWidth));
-    const alto = Math.max(230, Math.min(340, Math.round(ancho * 0.62)));
+    const alto = Math.max(200, Math.floor(tablero!.clientHeight));
     svg!.setAttribute("width", String(ancho));
     svg!.setAttribute("height", String(alto));
     svg!.setAttribute("viewBox", `0 0 ${ancho} ${alto}`);
-    tablero!.style.height = `${alto}px`;
 
     const x = scaleLinear()
       .domain([0, Math.max(1, n - 1)])

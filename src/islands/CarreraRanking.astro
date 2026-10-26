@@ -187,8 +187,21 @@ const descripcionSvg = `Barras del PIB de ${modelo.venezuela.pais.nombre} y los 
     set:html={JSON.stringify(datos)}
   ></script>
   <script>
-    import { iniciarCarrera } from "./carrera.ts";
-    iniciarCarrera();
+    // El gráfico va debajo del pliegue: se carga después del primer pintado para
+    // no competir con la imagen del meme, que es el LCP.
+    const arrancar = () => {
+      void import("./carrera.ts").then(({ iniciarCarrera }) => iniciarCarrera());
+    };
+    const cuandoLibre = () => {
+      const rIC = window.requestIdleCallback;
+      if (typeof rIC === "function") {
+        rIC(arrancar, { timeout: 1200 });
+      } else {
+        window.setTimeout(arrancar, 60);
+      }
+    };
+    if (document.readyState === "complete") cuandoLibre();
+    else window.addEventListener("load", cuandoLibre, { once: true });
   </script>
 </section>
 
@@ -200,11 +213,21 @@ const descripcionSvg = `Barras del PIB de ${modelo.venezuela.pais.nombre} y los 
     display: none !important;
   }
   .carrera-cabecera {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
     flex-wrap: wrap;
+    padding-right: 8.5rem;
+  }
+  .carrera-cabecera > div {
+    min-width: 0;
+  }
+  .carrera-cabecera .sello {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
   .carrera-cabecera h2 {
     margin: 0;
@@ -219,13 +242,20 @@ const descripcionSvg = `Barras del PIB de ${modelo.venezuela.pais.nombre} y los 
   .carrera-tablero {
     position: relative;
     width: 100%;
-    min-height: 360px;
+    height: 342px;
     margin-top: 0.75rem;
   }
+  @media (min-width: 640px) {
+    .carrera-tablero {
+      height: 612px;
+    }
+  }
   .carrera-svg {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     overflow: visible;
   }
   .carrera-etiquetas {

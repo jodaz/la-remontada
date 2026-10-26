@@ -23,6 +23,7 @@ const explicacion2 = `${proxima ? `La próxima víctima es ${proxima.pais.nombre
   og="/og/victima-numeros.png"
   ruta="/victima/numeros"
 >
+  <link slot="head" rel="preload" as="image" href="/memes/puertas.jpg" fetchpriority="high" />
   <article class="numeros">
     <header class="numeros-cabecera">
       <p class="rotulo">Los números</p>
@@ -85,7 +86,7 @@ const explicacion2 = `${proxima ? `La próxima víctima es ${proxima.pais.nombre
   }
   .numeros-cabecera h1 {
     margin: 0.15rem 0 0.35rem;
-    font-size: var(--t-40);
+    font-size: clamp(2rem, 8vw, 2.5rem);
   }
   .numeros-cabecera .rotulo {
     margin: 0;

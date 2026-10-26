@@ -18,7 +18,7 @@ const titulo = `El PIB de ${modelo.venezuela.pais.nombre}, en vivo`;
       <p class="contador-cifra contador" data-contador-cifra aria-hidden="true" aria-live="off">
         {referencia}
       </p>
-      <p class="contador-alternativa">
+      <p class="contador-alternativa visualmente-oculto">
         Cifra de referencia al compilar el sitio, el {fechaEnPalabras(modelo.fecha)}:{" "}
         <span class="contador">{referencia}</span>. La cifra grande se actualiza cada segundo con
         la estimación del FMI de {modelo.edicion}.
@@ -54,12 +54,14 @@ const titulo = `El PIB de ${modelo.venezuela.pais.nombre}, en vivo`;
     color: var(--tinta-suave);
   }
   .contador-cifra {
-    margin: 0.35rem 0 0.6rem;
-    font-size: clamp(1.4rem, 7.5vw, 2.6rem);
+    margin: 0.35rem 0 0.2rem;
+    font-size: clamp(1.35rem, 6.4vw, 2.25rem);
     line-height: 1.1;
+    min-height: 1.1em;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow-wrap: normal;
     color: var(--tinta);
   }
   .contador-alternativa {
