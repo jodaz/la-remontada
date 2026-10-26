@@ -12,15 +12,31 @@ const notas = { puertas: modelo.notas.puertas, escalera: modelo.notas.escalera }
 
 <Layout titulo="La Remontada" descripcion={modelo.lema} og="/og/inicio.png" ruta="/">
   <Fragment slot="head">
+    {/* El script async no espera al CSS que bloquea el render: elige el meme y
+        precarga su imagen (el LCP) cuanto antes. El script en línea corre justo
+        antes del primer pintado y garantiza que nunca se vea el meme equivocado,
+        aunque el archivo async no llegue a cargar. Los dos son idempotentes. */}
+    <script is:inline async src="/elegir-meme.js"></script>
     <script is:inline>
-      document.documentElement.dataset.meme = Math.random() < 0.5 ? "puertas" : "escalera";
+      const raiz = document.documentElement;
+      if (!raiz.dataset.meme) {
+        raiz.dataset.meme = Math.random() < 0.5 ? "puertas" : "escalera";
+      }
+      if (!document.querySelector('link[rel="preload"][as="image"]')) {
+        const imagen = document.createElement("link");
+        imagen.rel = "preload";
+        imagen.as = "image";
+        imagen.href = `/memes/${raiz.dataset.meme}.jpg`;
+        imagen.setAttribute("fetchpriority", "high");
+        document.head.append(imagen);
+      }
     </script>
   </Fragment>
 
   {
     MEMES.map((meme) => (
       <section class="pantalla-meme" data-pantalla={meme}>
-        <Meme meme={meme} />
+        <Meme meme={meme} carga="diferida" />
         <BotonDescarga meme={meme} />
         <NotaRealidad texto={notas[meme]} />
         <a class="boton-numeros" href={`${memes[meme].ruta}/numeros`}>

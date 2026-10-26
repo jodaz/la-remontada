@@ -8,9 +8,16 @@ import { memes, modelo } from "../lib/datos.ts";
 
 interface Props {
   meme: "puertas" | "escalera";
+  /**
+   * "inmediata" en /victima y /ranking. En `/` va "diferida": la imagen se carga
+   * con lazy (la del meme no elegido está en display:none y no se descarga) y el
+   * script del <head> precarga con prioridad alta solo la del meme elegido.
+   */
+  carga?: "inmediata" | "diferida";
 }
 
-const { meme } = Astro.props;
+const { meme, carga = "inmediata" } = Astro.props;
+const diferida = carga === "diferida";
 const config = memes[meme];
 const etiquetas = modelo.etiquetas[meme];
 
@@ -53,7 +60,8 @@ const resumen =
       width={config.ancho}
       height={config.alto}
       alt={ALT[meme]}
-      fetchpriority="high"
+      loading={diferida ? "lazy" : undefined}
+      fetchpriority={diferida ? undefined : "high"}
       decoding="async"
     />
     {etiquetas.map((etiqueta) => <Etiqueta etiqueta={etiqueta} />)}
