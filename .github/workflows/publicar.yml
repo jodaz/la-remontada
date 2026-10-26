@@ -1,6 +1,6 @@
 name: Publicar
 
-# Cloudflare Pages compila y despliega por su integración con Git. Este flujo
+# Cloudflare Workers compila y despliega por su integración con Git. Este flujo
 # existe porque su build no trae Chromium: genera las og:image con Playwright,
 # las versiona en public/og/ y archiva las capturas de cada ejecución en MEGA S4.
 # Si las og:image cambian, el commit a main dispara el build de Cloudflare;
@@ -110,7 +110,7 @@ jobs:
           fi
 
       # Sin commit nuevo, Cloudflare no compilaría solo: lo avisamos.
-      - name: Recompilar en Cloudflare Pages
+      - name: Recompilar en Cloudflare
         if: steps.og.outputs.cambio == 'false'
         run: |
           test -n "$CF_DEPLOY_HOOK" || { echo "::error::Falta el secreto CF_DEPLOY_HOOK"; exit 1; }

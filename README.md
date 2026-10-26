@@ -5,7 +5,7 @@ PIB del FMI. Dos memes que se actualizan solos con los datos y una página de
 números por meme, con gráficos y fuentes.
 
 - Dominio: `laremontada.vanguarddevs.com`
-- Hosting: Cloudflare Pages, salida estática de Astro.
+- Hosting: Cloudflare Workers con assets estáticos (`wrangler.jsonc`), salida estática de Astro.
 - Datos: solo FMI (World Economic Outlook). Nunca BCV.
 - Sin servidor, sin base de datos, sin cuentas y sin pedir datos a terceros
   mientras alguien navega. Todo el FMI viaja como JSON estático.
@@ -113,8 +113,10 @@ país; el resultado (`data/paises.json`) se revisa y se versiona.
 
 ## Publicación
 
-**Decisión:** Cloudflare Pages compila y despliega con su integración Git
-(comando `pnpm build`, salida `dist`, variable `NODE_VERSION=22.23.4`). Su imagen
+**Decisión:** Cloudflare Workers (assets estáticos) compila y despliega con su
+integración Git (build `pnpm build`, deploy `npx wrangler deploy`, directorio raíz
+`/`, variable `NODE_VERSION=22.23.4`; `wrangler.jsonc` sirve `dist/`). El nombre
+del Worker debe coincidir con `name` en `wrangler.jsonc`. Su imagen
 de build no trae Chromium, así que las `og:image` no se generan allí: se
 generan en Actions y se **versionan en `public/og/`**, de donde Astro las copia
 al build.
@@ -138,7 +140,7 @@ país. Las series son mensuales: el ranking no cambia entre dos meses.
 
 ### Analítica
 
-Cloudflare Web Analytics se activa en el panel del proyecto de Pages. Pages
+Cloudflare Web Analytics se activa en el panel del proyecto de Cloudflare. Se
 inyecta el beacon automáticamente; no hay que tocar el HTML. La CSP generada ya
 permite `https://static.cloudflareinsights.com` (script) y
 `https://cloudflareinsights.com` (conexión).

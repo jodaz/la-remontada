@@ -4,7 +4,7 @@
 // Uso: node scripts/capturas-og.ts [--dist dist] [--og dist/og] [--capturas dist-capturas] [--estricto]
 //
 // `--og public/og` deja los PNG donde Astro los copia al build, para versionarlos:
-// el build de Cloudflare Pages no trae Chromium y no puede generarlos.
+// el build de Cloudflare no trae Chromium y no puede generarlos.
 //
 // `--estricto` (o CAPTURAS_ESTRICTO=1) falla si falta alguna de las cinco rutas.
 // Sin esa opción avisa y sigue, para no bloquear mientras se construyen páginas.

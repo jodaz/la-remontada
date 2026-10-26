@@ -17,7 +17,7 @@ Package manager is pnpm; Node >= 22.23.4.
 ## Hard rules
 
 - **No hand-written numbers.** Every rank, country name on a meme, GDP figure, date, reality note, serial number (`Nº VE·072·2026-10`) and tagline ("Puesto {n} y subiendo.") comes from `data/`. If you're about to type "72" or "Guatemala" into a template, stop.
-- **Static only.** Astro static output on Cloudflare Pages. No server, no database, no accounts, no visitor data stored, and no third-party data requests while someone is browsing. All IMF data ships as static JSON.
+- **Static only.** Astro static output on Cloudflare Workers (static assets, `wrangler.jsonc`). No server, no database, no accounts, no visitor data stored, and no third-party data requests while someone is browsing. All IMF data ships as static JSON.
 - **Compute at build, animate in the browser.** Monthly series, rankings, victims and notes are computed at build time in `src/lib/`. Islands get precomputed data and only render or animate it.
 - **What you see is what you download.** A meme is the base image plus absolutely-positioned HTML labels. The PNG download captures that same DOM. Don't build a separate render path unless it's the `canvas` fallback, and that must read the same position file.
 - **v1 scope is fixed.** Don't add the "¿Cuándo pasamos a…?" simulator, MP4 export, extra memes, a free-text meme generator, an English version, or an "Otro meme" button.
@@ -124,7 +124,7 @@ The work ships in 4 phases. Don't start a phase before the previous one passes i
 | 1 · Datos | IMF workflow, `pib.json`, `paises.json`, flag-icons, label map | Figures match the IMF's |
 | 2 · Memes | Astro pages, routes and random meme, html-to-image, reality notes | Memes readable on iPhone and Android |
 | 3 · Números | Counter and victims, ranking race, total / per-capita toggle, sources and method | Charts verified |
-| 4 · Lanzamiento | Pages domain, `og:image` previews, analytics, headers and cache | Open questions closed |
+| 4 · Lanzamiento | Workers domain, `og:image` previews, analytics, headers and cache | Open questions closed |
 
 Phase 2 is the first one that can be shown. It's where label placement gets validated before the charts are built.
 
