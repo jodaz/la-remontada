@@ -1,0 +1,436 @@
+---
+import {
+  MS_PAUSA_CAIDA,
+  MS_POR_MES,
+  VISIBLES_CELULAR,
+  VISIBLES_ESCRITORIO,
+} from "../config.ts";
+import { modelo } from "../lib/datos.ts";
+import { nombreMes } from "../lib/meses.ts";
+import { etiquetaMetrica, valorDeMetrica, ventanaAlrededor } from "../lib/graficos.ts";
+import type { Barra, DatosCarrera, Metrica, PaisesDatos } from "./tipos.ts";
+
+const METRICA_INICIAL: Metrica = "total";
+const indiceActual = modelo.carrera.indiceActual;
+const meses = modelo.carrera.meses;
+const mesActual = meses[indiceActual] ?? modelo.mesActual;
+
+const isos = new Set<string>();
+for (const metrica of ["total", "porPersona"] as const) {
+  for (const cuadro of modelo.carrera.porMetrica[metrica].cuadros) {
+    for (const barra of cuadro.barras) isos.add(barra[0]);
+  }
+}
+const paises: PaisesDatos = {};
+for (const iso of isos) {
+  const pais = modelo.paises[iso];
+  if (pais) paises[iso] = [pais.iso2, pais.corto, pais.nombre];
+}
+
+const datos: DatosCarrera = {
+  meses,
+  indiceActual,
+  venezuela: modelo.venezuela.iso,
+  venezuelaNombre: modelo.venezuela.pais.nombre,
+  metricas: {
+    total: {
+      cuadros: modelo.carrera.porMetrica.total.cuadros.map((c) => [c.proyeccion, c.barras]),
+      caidas: modelo.carrera.porMetrica.total.caidas,
+    },
+    porPersona: {
+      cuadros: modelo.carrera.porMetrica.porPersona.cuadros.map((c) => [c.proyeccion, c.barras]),
+      caidas: modelo.carrera.porMetrica.porPersona.caidas,
+    },
+  },
+  paises,
+  visibles: { celular: VISIBLES_CELULAR, escritorio: VISIBLES_ESCRITORIO },
+  msPorMes: MS_POR_MES,
+  msPausa: MS_PAUSA_CAIDA,
+};
+
+const barrasIniciales = modelo.carrera.porMetrica[METRICA_INICIAL].cuadros[indiceActual].barras;
+const iVeInicial = barrasIniciales.findIndex((b) => b[0] === modelo.venezuela.iso);
+const filasIniciales: Barra[] = ventanaAlrededor(
+  barrasIniciales,
+  iVeInicial < 0 ? 0 : iVeInicial,
+  VISIBLES_ESCRITORIO,
+);
+const captionInicial = `Carrera del ranking, ${nombreMes(mesActual)}. ${etiquetaMetrica(METRICA_INICIAL)}.`;
+const descripcionSvg = `Barras del PIB de ${modelo.venezuela.pais.nombre} y los países a su alrededor. La tabla que sigue tiene los mismos datos.`;
+---
+
+<section class="carrera" data-carrera aria-labelledby="carrera-titulo">
+  <div class="carrera-cabecera">
+    <div>
+      <h2 id="carrera-titulo">La carrera del ranking</h2>
+      <p class="carrera-mes" data-carrera-mes>{nombreMes(mesActual)}</p>
+    </div>
+    <p class="sello" data-carrera-proyeccion hidden>PROYECCIÓN</p>
+  </div>
+
+  <div class="carrera-tablero" data-carrera-tablero>
+    <svg
+      class="carrera-svg"
+      data-carrera-svg
+      role="img"
+      aria-labelledby="carrera-svg-titulo carrera-svg-desc"
+    >
+      <title id="carrera-svg-titulo">Carrera del ranking, {nombreMes(mesActual)}</title>
+      <desc id="carrera-svg-desc">{descripcionSvg}</desc>
+      <defs>
+        <pattern id="rayas-ve" width="8" height="8" patternUnits="userSpaceOnUse">
+          <path
+            d="M-1,1 l2,-2 M0,8 l8,-8 M7,9 l2,-2"
+            stroke="var(--amarillo)"
+            stroke-width="2.6"
+            opacity="0.5"
+            fill="none"></path>
+        </pattern>
+        <pattern id="rayas-otra" width="8" height="8" patternUnits="userSpaceOnUse">
+          <path
+            d="M-1,1 l2,-2 M0,8 l8,-8 M7,9 l2,-2"
+            stroke="var(--barra)"
+            stroke-width="2.6"
+            opacity="0.5"
+            fill="none"></path>
+        </pattern>
+      </defs>
+      <g data-carrera-rejilla aria-hidden="true"></g>
+      <g data-carrera-barras aria-hidden="true"></g>
+    </svg>
+    <div class="carrera-etiquetas" data-carrera-etiquetas aria-hidden="true"></div>
+  </div>
+
+  <div class="aviso-caida" data-carrera-aviso role="status" aria-live="polite" hidden>
+    <span class="sello">CAÍDA</span>
+    <span data-carrera-aviso-texto></span>
+  </div>
+
+  <div class="carrera-controles">
+    <button type="button" class="control" data-carrera-play aria-pressed="false">Reproducir</button>
+    <div class="carrera-tiempo">
+      <input
+        type="range"
+        min="0"
+        max={meses.length - 1}
+        step="1"
+        value={indiceActual}
+        data-carrera-scrub
+        aria-label="Mes de la carrera"
+        aria-valuetext={nombreMes(mesActual)}
+      />
+      <div class="carrera-extremos" aria-hidden="true">
+        <span>{nombreMes(meses[0])}</span>
+        <span>{nombreMes(meses[meses.length - 1])}</span>
+      </div>
+    </div>
+    <button type="button" class="control" data-carrera-metrica aria-pressed="false">
+      PIB total / PIB por persona
+    </button>
+    <p class="carrera-metrica-actual" data-carrera-metrica-actual role="status" aria-live="polite">
+      Mostrando: PIB total
+    </p>
+  </div>
+
+  <p class="linea-datos">{modelo.lineaDatos}</p>
+
+  <div class="tabla-envoltura">
+    <table data-carrera-tabla>
+      <caption data-carrera-tabla-caption>{captionInicial}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Puesto</th>
+          <th scope="col">País</th>
+          <th scope="col">PIB total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          filasIniciales.map((barra) => (
+            <tr data-venezuela={barra[0] === modelo.venezuela.iso ? "" : undefined}>
+              <td>{barra[2]}</td>
+              <td>{modelo.paises[barra[0]]?.nombre ?? barra[0]}</td>
+              <td>{valorDeMetrica(METRICA_INICIAL, barra[1])}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <details class="carrera-detalle">
+    <summary>Puesto de {modelo.venezuela.pais.nombre}, mes a mes</summary>
+    <div class="tabla-envoltura">
+      <table data-carrera-vr-tabla>
+        <caption>Puesto de {modelo.venezuela.pais.nombre} en el PIB total, mes a mes</caption>
+        <thead>
+          <tr>
+            <th scope="col">Mes</th>
+            <th scope="col">Puesto</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </details>
+
+  <noscript>
+    <p class="letra-pequena">
+      El gráfico necesita JavaScript. La tabla de arriba tiene los mismos datos del mes actual.
+    </p>
+  </noscript>
+
+  <script
+    type="application/json"
+    id="datos-carrera"
+    is:inline
+    set:html={JSON.stringify(datos)}
+  ></script>
+  <script>
+    import { iniciarCarrera } from "./carrera.ts";
+    iniciarCarrera();
+  </script>
+</section>
+
+<style is:global>
+  .carrera {
+    margin: 2rem 0 1.5rem;
+  }
+  .carrera [hidden] {
+    display: none !important;
+  }
+  .carrera-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .carrera-cabecera h2 {
+    margin: 0;
+    font-size: var(--t-20);
+  }
+  .carrera-mes {
+    margin: 0.15rem 0 0;
+    font: 800 var(--t-28) / 1 var(--f-titulo);
+    color: var(--tinta);
+    text-transform: capitalize;
+  }
+  .carrera-tablero {
+    position: relative;
+    width: 100%;
+    min-height: 360px;
+    margin-top: 0.75rem;
+  }
+  .carrera-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .carrera-etiquetas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .carrera-etiquetas .fila {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--alto-fila, 30px);
+    will-change: transform;
+  }
+  .carrera-etiquetas .puesto {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 30px;
+    transform: translateY(-50%);
+    text-align: right;
+    font: 400 var(--t-12) / 1 var(--f-datos);
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-suave);
+  }
+  .carrera-etiquetas .bandera {
+    position: absolute;
+    left: 36px;
+    top: 50%;
+    width: 20px;
+    height: 15px;
+    transform: translateY(-50%);
+    border-radius: 1px;
+  }
+  .carrera-etiquetas .nombre {
+    position: absolute;
+    left: 62px;
+    top: 50%;
+    width: calc(var(--left-barra, 144px) - 68px);
+    transform: translateY(-50%);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: 700 var(--t-14) / 1.1 var(--f-texto);
+    color: var(--tinta);
+  }
+  .carrera-etiquetas .valor {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    width: var(--valor-ancho, 94px);
+    transform: translateY(-50%);
+    text-align: right;
+    white-space: nowrap;
+    font: 400 11px / 1 var(--f-datos);
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta);
+  }
+  .carrera .barra-ve {
+    fill: var(--amarillo);
+  }
+  .carrera .barra-otra {
+    fill: var(--barra);
+  }
+  .carrera .barra-proyeccion-ve {
+    fill: url(#rayas-ve);
+  }
+  .carrera .barra-proyeccion-otra {
+    fill: url(#rayas-otra);
+  }
+  .carrera-controles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .carrera .control {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.6em 1em;
+    font: 700 var(--t-14) / 1 var(--f-texto);
+    background: transparent;
+    color: var(--tinta);
+    border: var(--borde) solid var(--tinta);
+    border-radius: var(--radio);
+    cursor: pointer;
+  }
+  .carrera .control[aria-pressed="true"] {
+    background: var(--papel-2);
+    box-shadow: inset 0 0 0 2px var(--tinta);
+  }
+  .carrera-tiempo {
+    flex: 1 1 220px;
+    min-width: 190px;
+  }
+  .carrera-tiempo input[type="range"] {
+    display: block;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    accent-color: var(--azul);
+    cursor: pointer;
+  }
+  .carrera-extremos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -0.5rem;
+    font: 400 10px / 1.2 var(--f-datos);
+    color: var(--tinta-suave);
+  }
+  .carrera-metrica-actual {
+    margin: 0;
+    font: 600 var(--t-12) / 1.3 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .carrera .aviso-caida {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 0.75rem 0;
+    padding: 0.5rem 0.75rem;
+    background: var(--papel-2);
+    border: 1px solid var(--guilloche);
+    border-radius: var(--radio);
+  }
+  .carrera .aviso-caida .sello {
+    font-size: var(--t-14);
+    animation: carrera-caida 200ms ease-out both;
+  }
+  .carrera .aviso-caida [data-carrera-aviso-texto] {
+    font: 700 var(--t-14) / 1.3 var(--f-texto);
+    color: var(--tinta);
+  }
+  @keyframes carrera-caida {
+    from {
+      transform: scale(1.3) rotate(-6deg);
+    }
+    to {
+      transform: scale(1) rotate(-6deg);
+    }
+  }
+  .carrera .linea-datos {
+    margin: 0.75rem 0 0;
+    font: 400 var(--t-12) / 1.4 var(--f-datos);
+    color: var(--tinta-suave);
+  }
+  .tabla-envoltura {
+    width: 100%;
+    margin-top: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .carrera table {
+    width: 100%;
+    min-width: 320px;
+    border-collapse: collapse;
+    background: var(--papel-2);
+    color: var(--tinta);
+    font-size: var(--t-14);
+  }
+  .carrera caption {
+    padding: 0.5rem 0.6rem;
+    text-align: left;
+    font: 600 11px / 1.4 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .carrera th,
+  .carrera td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--guilloche);
+    text-align: left;
+  }
+  .carrera th {
+    font: 600 11px / 1.3 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .carrera td:first-child,
+  .carrera td:last-child {
+    font-family: var(--f-datos);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .carrera tr[data-venezuela] td {
+    font-weight: 700;
+  }
+  .carrera tr[data-venezuela] td:first-child {
+    box-shadow: inset 3px 0 0 var(--amarillo);
+  }
+  .carrera-detalle {
+    margin-top: 1rem;
+  }
+  .carrera-detalle summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font: 700 var(--t-14) / 1.3 var(--f-texto);
+    color: var(--azul);
+    cursor: pointer;
+  }
+</style>

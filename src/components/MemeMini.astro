@@ -1,0 +1,43 @@
+---
+import puertas from "../../memes/puertas.json";
+import escalera from "../../memes/escalera.json";
+
+interface Props {
+  meme: "puertas" | "escalera";
+  /** Ruta del meme al que vuelve el enlace: /victima o /ranking. */
+  ruta: string;
+  alt: string;
+}
+
+const { meme, ruta, alt } = Astro.props;
+const config = meme === "puertas" ? puertas : escalera;
+---
+
+<a class:list={["meme-mini", `meme-mini--${meme}`]} href={ruta} aria-label={`Ir al meme: ${alt}`}>
+  <img
+    src={`/memes/${config.imagen}`}
+    width={config.ancho}
+    height={config.alto}
+    alt={alt}
+    decoding="async"
+  />
+</a>
+
+<style>
+  .meme-mini {
+    display: block;
+    width: min(240px, 100%);
+    margin: 1rem 0;
+    padding: 4px;
+    background: var(--papel-2);
+    border: 1px solid var(--guilloche);
+  }
+  .meme-mini--escalera {
+    width: min(150px, 100%);
+  }
+  .meme-mini img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
