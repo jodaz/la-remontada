@@ -16,7 +16,7 @@ Package manager is pnpm; Node >= 22.23.4.
 
 ## Hard rules
 
-- **No hand-written numbers.** Every rank, country name on a meme, GDP figure, date, reality note, serial number (`Nº VE·072·2026-10`) and tagline ("Puesto {n} y subiendo.") comes from `data/`. If you're about to type "72" or "Guatemala" into a template, stop.
+- **No hand-written numbers.** Every rank, country name on a meme, GDP figure, date, reality note, and tagline ("Puesto {n} y subiendo.") comes from `data/`. If you're about to type "72" or "Guatemala" into a template, stop.
 - **Static only.** Astro static output on Cloudflare Workers (static assets, `wrangler.jsonc`). No server, no database, no accounts, no visitor data stored, and no third-party data requests while someone is browsing. All IMF data ships as static JSON.
 - **Compute at build, animate in the browser.** Monthly series, rankings, victims and notes are computed at build time in `src/lib/`. Islands get precomputed data and only render or animate it.
 - **What you see is what you download.** A meme is the base image plus absolutely-positioned HTML labels. The PNG download captures that same DOM. Don't build a separate render path unless it's the `canvas` fallback, and that must read the same position file.
@@ -61,13 +61,13 @@ Months after the current one are **projection** and must look different everywhe
   - `ancho`: the label's max width, as % of the image width.
   - `fuente`: the font size, as % of the image width.
   - `rol` and `indice`: which data goes there. `indice` 1 is the country closest to Venezuela, or the most recent victim.
-  - `muestra`: what to render (`bandera`, `nombre`, `puesto`, `rotulo`). `nombreFijo` and `rotulo` hold fixed text.
+  - `muestra`: what to render (`bandera`, `nombre`, `puesto`, `pib`, `rotulo`). `pib` is that country's total GDP for the current month, from `data/`: compact on escalera (`$112 MM`), standard on puertas (`$124,2 mil M`). `nombreFijo` and `rotulo` hold fixed text.
   - The top-level `marca.esquina` is the watermark corner.
 - Font sizes use `cqw`. iOS 15 has no container queries, so there a `ResizeObserver` sets a CSS variable with the meme width.
 - The positions are a first calibration. Tune them with `memes/preview.html`: run `npx serve .` from the repo root, open `/memes/preview.html`, and tick "Mostrar el borde de cada etiqueta". The preview inlines a **copy** of both JSON files in its `CONFIG` and uses sample countries, so re-paste `CONFIG` after editing the JSON.
 - Flags use `flag-icons` classes (`fi fi-ve`). Label text uses Anton, white with a black outline and uppercase, and shrinks to fit long names.
-- **Puertas (`/victima`)**: doors 1–4 hold the 5th to 2nd most recent victims, door 5 the latest victim, door 6 the country just above Venezuela plus "PRÓXIMA VÍCTIMA". With fewer than 5 victims, fill the extra doors with the countries just below Venezuela. This also covers Venezuela falling in the ranking.
-- **Escalera (`/ranking`)**: the top figure is #1, the next 9 are the countries just above Venezuela, the celebrating figure is Venezuela (big rank + "VENEZUELA"), and the bottom figure is the latest victim. Only Venezuela gets a full name; the rest get flag + rank.
+- **Puertas (`/victima`)**: doors 1–4 hold the 5th to 2nd most recent victims, door 5 the latest victim, door 6 the country just above Venezuela plus "PRÓXIMA VÍCTIMA". Each door label shows flag, name and the country's PIB total in standard form (`$124,2 mil M`). With fewer than 5 victims, fill the extra doors with the countries just below Venezuela. This also covers Venezuela falling in the ranking.
+- **Escalera (`/ranking`)**: the top figure is #1, the next 9 are the countries just above Venezuela, the celebrating figure is Venezuela (big rank + "VENEZUELA"), and the bottom figure is the latest victim. Only Venezuela gets a full name; the rest get flag + rank, and every label adds that country's PIB total in compact form (`$112 MM`).
 - `/` chooses one meme 50/50 with an inline `<head>` script **before first paint**, so the page never flickers. `/victima` and `/ranking` always show their own meme. Each has its own `og:image` and `twitter:card`, taken from Playwright screenshots.
 - "Volver al meme" goes to that meme's route, never to `/`.
 
@@ -99,7 +99,7 @@ The site is styled like a bolívar banknote, with the frame kept quiet so the me
 
 - The joke is the situation and the cope, never other countries' people, culture or problems.
 - No fake screenshots of real accounts or of Grok. If a voice is needed, invent a character.
-- Reality notes are 1–2 dry lines, presented as "LETRA PEQUEÑA". They state one data point the meme leaves out, with no moral.
+- Reality notes are 1–2 dry lines, presented as the small print of the banknote (no label). They state one data point the meme leaves out, with no moral.
 - Use the PRD's fixed copy exactly ("Descargar meme", "Ver los números", "Volver al meme", the footer, the method line).
 
 ## Budgets and compatibility
@@ -112,6 +112,7 @@ The site is styled like a bolívar banknote, with the frame kept quiet so the me
 
 - `datos-fmi.yml` downloads the IMF WEO file and validates it (~190 countries, Venezuela present, no absurd jumps). It then opens a PR with a summary ("Venezuela pasa del puesto X al Y; nueva próxima víctima: Z"). It must **never publish without approval**.
 - `recompilar-mensual.yml` rebuilds on the 1st of each month so the meme changes when a country falls.
+- Cloudflare Workers builds `main` through its Git integration (`pnpm build`, then `npx wrangler deploy`; config in `wrangler.jsonc`, which also needs `"previews": {}` for non-`main` branches). Chromium isn't available there, so `publicar.yml` generates the og:image PNGs and commits them to `public/og/`. Don't add a wrangler deploy step to Actions. Settings table: README, "Publicación".
 - Raw IMF files and meme screenshots of each rebuild are archived in MEGA S4. Its credentials live only in GitHub Actions secrets.
 - The current edition is the WEO of October 2026. Use only IMF data, never BCV figures.
 

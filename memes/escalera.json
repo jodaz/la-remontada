@@ -17,7 +17,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -32,7 +33,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -47,7 +49,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -62,7 +65,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -77,7 +81,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -92,7 +97,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -107,7 +113,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -122,7 +129,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -137,7 +145,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
@@ -152,22 +161,24 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     },
     {
       "id": "celebra",
       "rol": "venezuela",
-      "descripcion": "El que celebra con champaña. Va en la cara del escalón, debajo de sus pies, porque encima está la champaña.",
+      "descripcion": "El que celebra con champaña. Va en la cara del escalón, debajo de sus pies, porque encima está la champaña. Sube lo justo para que la línea del PIB no se salga por abajo.",
       "x": 82.37,
-      "y": 91.6,
+      "y": 90,
       "ancla": "arriba",
       "ancho": 24,
       "fuente": 3.4,
       "muestra": [
         "bandera",
         "puesto",
-        "nombre"
+        "nombre",
+        "pib"
       ],
       "nombreFijo": "VENEZUELA"
     },
@@ -183,7 +194,8 @@
       "fuente": 2.1,
       "muestra": [
         "bandera",
-        "puesto"
+        "puesto",
+        "pib"
       ]
     }
   ],

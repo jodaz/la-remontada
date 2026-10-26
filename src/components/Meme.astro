@@ -1,6 +1,6 @@
 ---
 // El meme: imagen base + etiquetas HTML + marca de agua, dentro del marco de billete.
-// El marco y los números de serie quedan fuera de `.meme`, que es lo único que se descarga.
+// El marco queda fuera de `.meme`, que es lo único que se descarga.
 import Etiqueta from "./Etiqueta.astro";
 import Isotipo from "./Isotipo.astro";
 import { SITIO } from "../config.ts";
@@ -52,8 +52,6 @@ const resumen =
 ---
 
 <figure class:list={["marco-billete", "marco-meme"]} data-figura={meme}>
-  <span class="serie-marco serie-arriba" aria-hidden="true">{modelo.serie}</span>
-
   <div class="meme" data-meme={meme} data-ancho={config.ancho} data-alto={config.alto}>
     <img
       src={`/memes/${config.imagen}`}
@@ -71,7 +69,6 @@ const resumen =
     </div>
   </div>
 
-  <span class="serie-marco serie-abajo" aria-hidden="true">{modelo.serie}</span>
   <figcaption class="visualmente-oculto">{resumen}</figcaption>
 </figure>
 
@@ -84,7 +81,7 @@ const resumen =
     position: relative;
     width: 100%;
     margin: 0;
-    padding: 1.6rem 0.5rem;
+    padding: 0.5rem;
   }
 
   /* La escalera es muy alta: en escritorio se limita el alto para que no domine la pantalla. */
@@ -92,23 +89,6 @@ const resumen =
     .marco-meme[data-figura="escalera"] {
       max-width: min(var(--ancho-meme), calc(78vh * 777 / 1100));
     }
-  }
-
-  .serie-marco {
-    position: absolute;
-    font: 400 11px / 1.2 var(--f-datos);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: var(--guiado);
-    color: var(--tinta-suave);
-    white-space: nowrap;
-  }
-  .serie-arriba {
-    top: 0.35rem;
-    left: 0.6rem;
-  }
-  .serie-abajo {
-    bottom: 0.35rem;
-    right: 0.6rem;
   }
 
   .meme {

@@ -22,7 +22,7 @@ export interface Pais {
 
 export type ArchivoPaises = Record<string, Pais>;
 
-export type Muestra = "bandera" | "nombre" | "puesto" | "rotulo";
+export type Muestra = "bandera" | "nombre" | "puesto" | "pib" | "rotulo";
 
 export interface EtiquetaConfig {
   id: string;
