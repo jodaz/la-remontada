@@ -8,8 +8,10 @@ export async function esperarPagina(page: Page, respiro = 300): Promise<void> {
   await page
     .evaluate(async () => {
       await document.fonts.ready;
-      await Promise.all(
-        Array.from(document.images).map((imagen) =>
+      // Las imágenes ocultas con loading="lazy" (el meme no elegido en "/") nunca cargan: se ignoran.
+      const visibles = Array.from(document.images).filter((imagen) => imagen.getClientRects().length > 0);
+      const cargas = Promise.all(
+        visibles.map((imagen) =>
           imagen.complete
             ? Promise.resolve()
             : new Promise<void>((listo) => {
@@ -18,6 +20,7 @@ export async function esperarPagina(page: Page, respiro = 300): Promise<void> {
               }),
         ),
       );
+      await Promise.race([cargas, new Promise((listo) => setTimeout(listo, 10_000))]);
     })
     .catch(() => {});
   if (respiro > 0) await page.waitForTimeout(respiro);
