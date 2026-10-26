@@ -61,13 +61,13 @@ Months after the current one are **projection** and must look different everywhe
   - `ancho`: the label's max width, as % of the image width.
   - `fuente`: the font size, as % of the image width.
   - `rol` and `indice`: which data goes there. `indice` 1 is the country closest to Venezuela, or the most recent victim.
-  - `muestra`: what to render (`bandera`, `nombre`, `puesto`, `rotulo`). `nombreFijo` and `rotulo` hold fixed text.
+  - `muestra`: what to render (`bandera`, `nombre`, `puesto`, `pib`, `rotulo`). `pib` is that country's total GDP for the current month, from `data/`: compact on escalera (`$112 MM`), standard on puertas (`$124,2 mil M`). `nombreFijo` and `rotulo` hold fixed text.
   - The top-level `marca.esquina` is the watermark corner.
 - Font sizes use `cqw`. iOS 15 has no container queries, so there a `ResizeObserver` sets a CSS variable with the meme width.
 - The positions are a first calibration. Tune them with `memes/preview.html`: run `npx serve .` from the repo root, open `/memes/preview.html`, and tick "Mostrar el borde de cada etiqueta". The preview inlines a **copy** of both JSON files in its `CONFIG` and uses sample countries, so re-paste `CONFIG` after editing the JSON.
 - Flags use `flag-icons` classes (`fi fi-ve`). Label text uses Anton, white with a black outline and uppercase, and shrinks to fit long names.
-- **Puertas (`/victima`)**: doors 1–4 hold the 5th to 2nd most recent victims, door 5 the latest victim, door 6 the country just above Venezuela plus "PRÓXIMA VÍCTIMA". With fewer than 5 victims, fill the extra doors with the countries just below Venezuela. This also covers Venezuela falling in the ranking.
-- **Escalera (`/ranking`)**: the top figure is #1, the next 9 are the countries just above Venezuela, the celebrating figure is Venezuela (big rank + "VENEZUELA"), and the bottom figure is the latest victim. Only Venezuela gets a full name; the rest get flag + rank.
+- **Puertas (`/victima`)**: doors 1–4 hold the 5th to 2nd most recent victims, door 5 the latest victim, door 6 the country just above Venezuela plus "PRÓXIMA VÍCTIMA". Each door label shows flag, name and the country's PIB total in standard form (`$124,2 mil M`). With fewer than 5 victims, fill the extra doors with the countries just below Venezuela. This also covers Venezuela falling in the ranking.
+- **Escalera (`/ranking`)**: the top figure is #1, the next 9 are the countries just above Venezuela, the celebrating figure is Venezuela (big rank + "VENEZUELA"), and the bottom figure is the latest victim. Only Venezuela gets a full name; the rest get flag + rank, and every label adds that country's PIB total in compact form (`$112 MM`).
 - `/` chooses one meme 50/50 with an inline `<head>` script **before first paint**, so the page never flickers. `/victima` and `/ranking` always show their own meme. Each has its own `og:image` and `twitter:card`, taken from Playwright screenshots.
 - "Volver al meme" goes to that meme's route, never to `/`.
 

@@ -85,19 +85,20 @@ Volver desde los gráficos regresa a la ruta del mismo meme, no a `/`.
 
 ## Requisitos funcionales
 
-Cada meme es la imagen base con etiquetas HTML encima (bandera + texto), armadas con los datos al compilar. La descarga fotografía ese mismo HTML, así que lo que se ve es lo que se baja, y el meme se actualiza solo cuando cambia el ranking.
+Cada meme es la imagen base con etiquetas HTML encima (bandera + texto + PIB total), armadas con los datos al compilar. La descarga fotografía ese mismo HTML, así que lo que se ve es lo que se baja, y el meme se actualiza solo cuando cambia el ranking.
 
 ### Meme 1 · La muerte tocando puertas (`/victima`)
 
 | Lugar en la imagen | Qué lleva | De dónde sale |
 | --- | --- | --- |
-| Puertas 1 a 4 (ensangrentadas, de izquierda a derecha) | Bandera + nombre | Las víctimas 5.ª a 2.ª más recientes |
-| Puerta 5 (abierta, junto a la muerte) | Bandera + nombre | La última víctima |
-| Puerta 6 (donde toca) | Bandera + nombre + "PRÓXIMA VÍCTIMA" | El país justo encima de Venezuela |
+| Puertas 1 a 4 (ensangrentadas, de izquierda a derecha) | Bandera + nombre + PIB total | Las víctimas 5.ª a 2.ª más recientes |
+| Puerta 5 (abierta, junto a la muerte) | Bandera + nombre + PIB total | La última víctima |
+| Puerta 6 (donde toca) | Bandera + nombre + PIB total + "PRÓXIMA VÍCTIMA" | El país justo encima de Venezuela |
 | La muerte | Bandera de Venezuela en la túnica | Fija |
 
 - **Víctima** = país que estaba por encima de Venezuela en la fecha de inicio y hoy está por debajo. La fecha de inicio se configura en un solo lugar (propuesta: enero de 2026).
 - Si hay menos de 5 víctimas, las puertas sobrantes toman los países que siguen por debajo.
+- El PIB total va debajo del nombre, con la cifra estándar: "$124,2 mil M".
 - Nota de realidad (plantilla con datos): "Pasamos a {última víctima} en PIB total. En PIB por persona, {última víctima} produce {N} veces más que Venezuela."
 
 ### Meme 2 · La escalera de medallas (`/ranking`)
@@ -106,11 +107,12 @@ La imagen tiene 12 personajes: 10 en los escalones de arriba, el que celebra y 1
 
 | Lugar en la imagen | Qué lleva | De dónde sale |
 | --- | --- | --- |
-| Personaje de arriba (rojo) | Bandera + "#1" | El primer país del ranking |
-| Los 9 siguientes | Bandera + su puesto | Los 9 países justo encima de Venezuela |
-| El que celebra | Bandera + "#{puesto}" grande + "VENEZUELA" | Puesto actual de Venezuela |
-| El de abajo | Bandera + su puesto | La última víctima |
+| Personaje de arriba (rojo) | Bandera + "#1" + PIB total | El primer país del ranking |
+| Los 9 siguientes | Bandera + su puesto + PIB total | Los 9 países justo encima de Venezuela |
+| El que celebra | Bandera + "#{puesto}" grande + "VENEZUELA" + PIB total | Puesto actual de Venezuela |
+| El de abajo | Bandera + su puesto + PIB total | La última víctima |
 
+- El PIB total va debajo del puesto, en formato compacto de mil millones: "$112 MM".
 - Nota de realidad (plantilla con datos): "Puesto {puesto} en PIB total, pero puesto {puesto per cápita} de {total} en PIB por persona."
 
 ### Etiquetas y descarga
@@ -118,6 +120,7 @@ La imagen tiene 12 personajes: 10 en los escalones de arriba, el que celebra y 1
 - Cada etiqueta es un bloque HTML con `position: absolute` sobre la imagen, ubicado en porcentajes (izquierda, arriba, ancho) para que escale igual en cualquier pantalla.
 - Las posiciones viven en un archivo por meme (`memes/puertas.json`, `memes/escalera.json`) que Astro lee al compilar. Hay una primera calibración en este paquete.
 - Bandera: clase de `flag-icons` (`fi fi-ve`). Texto: letra estilo meme, blanca con borde negro, en Anton (Google Fonts). Se achica sola si el nombre no cabe.
+- El PIB total de cada etiqueta sale de `data/` para el mes actual; la escalera lo abrevia en "MM" y las puertas usan la cifra estándar.
 - "Descargar meme" convierte el bloque del meme en PNG con `html-to-image`, al tamaño original de la imagen (ajustando `pixelRatio`), con `laremontada.vanguarddevs.com` en una esquina.
 - Antes de capturar se espera a `document.fonts.ready`. En Safari se captura dos veces y se usa la segunda, porque la primera puede salir con imágenes en blanco.
 - Respaldo, si las pruebas en iPhone fallan: redibujar en un `canvas` con el mismo archivo de posiciones.
@@ -392,7 +395,7 @@ El riesgo mayor es que los números del sitio no coincidan con los que circulan 
 | Venezuela baja en el ranking | Una devaluación o una caída del petróleo cambia el PIB en dólares | Las puertas usan el respaldo definido (países por debajo) y el meme sigue funcionando |
 | Se citan las cifras del BCV | El BCV reporta 7,14% en el segundo trimestre; el FMI proyecta menos | La sección de fuentes explica que el sitio usa solo al FMI |
 | La descarga falla en Safari | `html-to-image` a veces captura imágenes en blanco la primera vez | Doble captura, respaldo con `canvas` y prueba en iPhone antes de lanzar |
-| Etiquetas ilegibles en celular | La escalera tiene 12 personajes y las puertas del fondo son pequeñas | Solo bandera + puesto en los 11 personajes de la escalera; en la descarga (tamaño original) se leen bien |
+| Etiquetas ilegibles en celular | La escalera tiene 12 personajes y las puertas del fondo son pequeñas | Bandera + puesto + PIB compacto en los 11 personajes de la escalera; en la descarga (tamaño original) se leen bien |
 | Uso de las imágenes | Son memes de autoría poco clara | Confirmar origen y dar crédito antes de publicar |
 
 **Preguntas abiertas**
@@ -463,7 +466,7 @@ laremontada/
 
 - [ ] `/` muestra uno de los dos memes al azar, sin parpadeo entre uno y otro.
 - [ ] `/victima` y `/ranking` muestran siempre su meme y tienen su propia `og:image`.
-- [ ] Las etiquetas de ambos memes coinciden con el ranking calculado para el mes actual.
+- [ ] Las etiquetas de ambos memes coinciden con el ranking calculado para el mes actual y muestran el PIB total de cada país: compacto en la escalera ("$112 MM"), estándar en las puertas ("$124,2 mil M").
 - [ ] "Descargar meme" baja un PNG al tamaño original con banderas, texto y dirección del sitio en Chrome para Android y Safari para iPhone.
 - [ ] La carrera va de enero de 2020 al mes actual más 6 meses, con la proyección rayada, el aviso de cada caída y el cambio entre PIB total y por persona.
 - [ ] Con movimiento reducido, ningún gráfico se anima.
