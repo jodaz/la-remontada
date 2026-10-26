@@ -112,6 +112,7 @@ The site is styled like a bolívar banknote, with the frame kept quiet so the me
 
 - `datos-fmi.yml` downloads the IMF WEO file and validates it (~190 countries, Venezuela present, no absurd jumps). It then opens a PR with a summary ("Venezuela pasa del puesto X al Y; nueva próxima víctima: Z"). It must **never publish without approval**.
 - `recompilar-mensual.yml` rebuilds on the 1st of each month so the meme changes when a country falls.
+- Cloudflare Workers builds `main` through its Git integration (`pnpm build`, then `npx wrangler deploy`; config in `wrangler.jsonc`, which also needs `"previews": {}` for non-`main` branches). Chromium isn't available there, so `publicar.yml` generates the og:image PNGs and commits them to `public/og/`. Don't add a wrangler deploy step to Actions. Settings table: README, "Publicación".
 - Raw IMF files and meme screenshots of each rebuild are archived in MEGA S4. Its credentials live only in GitHub Actions secrets.
 - The current edition is the WEO of October 2026. Use only IMF data, never BCV figures.
 

@@ -121,6 +121,22 @@ de build no trae Chromium, así que las `og:image` no se generan allí: se
 generan en Actions y se **versionan en `public/og/`**, de donde Astro las copia
 al build.
 
+Ajustes en Cloudflare (Workers & Pages → `laremontada` → Settings → Builds):
+
+| Ajuste | Valor |
+| --- | --- |
+| Rama de producción | `main` |
+| Comando de build | `pnpm build` |
+| Comando de deploy | `npx wrangler deploy` |
+| Deploy de ramas que no son `main` | `npx wrangler preview` (exige `"previews": {}` en `wrangler.jsonc`) |
+| Directorio raíz | `/` (no `/dist`: `dist` solo existe después del build) |
+| Variable | `NODE_VERSION=22.23.4` |
+| Deploy hook | rama `main`; su URL va en el secreto `CF_DEPLOY_HOOK` de GitHub |
+
+Si un build falla con "assets.directory ... does not exist", el comando de build
+no corrió: revisa que esté guardado, o antepón `pnpm build &&` al comando de
+deploy.
+
 Flujo (`.github/workflows/publicar.yml`):
 
 1. Push a `main`, ejecución manual o llamada del cron mensual.
