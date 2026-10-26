@@ -290,13 +290,12 @@ Las dos plantillas son memes que circulan desde hace años y se usan tal cual co
 
 ## Identidad visual
 
-El sitio se viste de billete de bolívar: papel con tramas grabadas, número de serie, sellos y letra pequeña, con los tres colores de la bandera. El marco es sobrio y los memes son lo único ruidoso. La ironía es el punto: la remontada se presenta con la estética del dinero que perdió su valor.
+El sitio se viste de billete de bolívar: papel con tramas grabadas, sellos y letra pequeña, con los tres colores de la bandera. El marco es sobrio y los memes son lo único ruidoso. La ironía es el punto: la remontada se presenta con la estética del dinero que perdió su valor.
 
 ### Concepto en tres piezas
 
 - **El billete.** Fondo color papel moneda, tramas de guilloché (líneas onduladas entrelazadas) solo en el encabezado y el pie, y un borde doble alrededor del meme, como el marco de un billete.
-- **El número de serie.** Cada página lleva arriba a la derecha una serie con el puesto actual, por ejemplo `Nº VE·072·2026-10`. Se actualiza con los datos y es el detalle que repite la marca en todas partes.
-- **La letra pequeña.** La nota de realidad se presenta como la letra pequeña del billete, con la etiqueta `LETRA PEQUEÑA` en mayúsculas antes del texto. Es el lugar natural del dato incómodo.
+- **La letra pequeña.** La nota de realidad se presenta como la letra pequeña del billete, sin etiqueta propia. Es el lugar natural del dato incómodo.
 
 ### Marca
 
@@ -337,7 +336,7 @@ No se usa el escudo nacional, ni logos o nombres de bancos reales.
 | --- | --- | --- | --- |
 | Títulos y cifras grandes | Big Shoulders Display, 700–900 | Logotipo, "Puesto 72", mes de la carrera, encabezados | `Impact, "Arial Narrow", sans-serif` |
 | Texto | Atkinson Hyperlegible, 400 y 700 | Párrafos, botones, notas | `system-ui, sans-serif` |
-| Datos | Martian Mono, 400–600 | Número de serie, contador, valores de barras, etiqueta LETRA PEQUEÑA | `ui-monospace, monospace` |
+| Datos | Martian Mono, 400–600 | Contador, valores de barras | `ui-monospace, monospace` |
 | Etiquetas del meme | Anton, 400 | Solo el texto sobre las imágenes, blanco con borde negro | `Impact, sans-serif` |
 
 Escala (celular → escritorio): 12 · 14 · 16 · 20 · 28 · 40 · 64 px. Cifras siempre con `font-variant-numeric: tabular-nums`. Etiquetas en mayúsculas con `letter-spacing: 0.08em`.
@@ -348,11 +347,11 @@ Escala (celular → escritorio): 12 · 14 · 16 · 20 · 28 · 40 · 64 px. Cifr
 | --- | --- |
 | Botón "Descargar meme" | Fondo `--amarillo`, texto tinta oscura en Atkinson 700, borde 2 px `--tinta`, radio 4 px, sombra sólida desplazada 3 px abajo a la derecha. Al presionarlo, la sombra desaparece y el botón baja 3 px, como un sello |
 | Botón "Ver los números" | Solo borde 2 px `--tinta`, fondo transparente, flecha → al final |
-| Marco del meme | Doble línea `--guilloche` (1 px, 4 px de separación, 1 px), con el número de serie en Martian Mono 11 px en dos esquinas opuestas. El marco no sale en la descarga |
-| Letra pequeña | `LETRA PEQUEÑA` en Martian Mono 11 px `--tinta-suave`, seguida del texto en Atkinson 14 px. Ancho máximo de unos 60 caracteres |
+| Marco del meme | Doble línea `--guilloche` (1 px, 4 px de separación, 1 px). El marco no sale en la descarga |
+| Letra pequeña | Texto en Atkinson 14 px, sin etiqueta. Ancho máximo de unos 60 caracteres |
 | Aviso de caída | Sello rojo "CAÍDA" + "Cae Croacia · marzo 2026", sobre `--papel-2` |
-| Encabezado | Logotipo a la izquierda, número de serie a la derecha, franja de guilloché de 24 px debajo |
-| Pie | Franja de guilloché, "Sitio de humor. Los números son reales; la euforia, no tanto." y enlace a las fuentes |
+| Encabezado | Logotipo a la izquierda, franja de guilloché de 24 px debajo |
+| Pie | Franja de guilloché, "Sitio de humor. Los números son reales; la euforia, no tanto." enlace a las fuentes y una línea de créditos a vanguarddevs.com ("Hecho por vanguarddevs.com. Ningún economista fue consultado; dos cafés, sí.") |
 
 ### Movimiento
 

@@ -16,7 +16,7 @@ Package manager is pnpm; Node >= 22.23.4.
 
 ## Hard rules
 
-- **No hand-written numbers.** Every rank, country name on a meme, GDP figure, date, reality note, serial number (`Nº VE·072·2026-10`) and tagline ("Puesto {n} y subiendo.") comes from `data/`. If you're about to type "72" or "Guatemala" into a template, stop.
+- **No hand-written numbers.** Every rank, country name on a meme, GDP figure, date, reality note, and tagline ("Puesto {n} y subiendo.") comes from `data/`. If you're about to type "72" or "Guatemala" into a template, stop.
 - **Static only.** Astro static output on Cloudflare Workers (static assets, `wrangler.jsonc`). No server, no database, no accounts, no visitor data stored, and no third-party data requests while someone is browsing. All IMF data ships as static JSON.
 - **Compute at build, animate in the browser.** Monthly series, rankings, victims and notes are computed at build time in `src/lib/`. Islands get precomputed data and only render or animate it.
 - **What you see is what you download.** A meme is the base image plus absolutely-positioned HTML labels. The PNG download captures that same DOM. Don't build a separate render path unless it's the `canvas` fallback, and that must read the same position file.
@@ -99,7 +99,7 @@ The site is styled like a bolívar banknote, with the frame kept quiet so the me
 
 - The joke is the situation and the cope, never other countries' people, culture or problems.
 - No fake screenshots of real accounts or of Grok. If a voice is needed, invent a character.
-- Reality notes are 1–2 dry lines, presented as "LETRA PEQUEÑA". They state one data point the meme leaves out, with no moral.
+- Reality notes are 1–2 dry lines, presented as the small print of the banknote (no label). They state one data point the meme leaves out, with no moral.
 - Use the PRD's fixed copy exactly ("Descargar meme", "Ver los números", "Volver al meme", the footer, the method line).
 
 ## Budgets and compatibility

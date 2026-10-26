@@ -140,14 +140,6 @@ h1, h2, h3, .cifra-grande {
   font-size: var(--t-14);
   color: var(--tinta);
 }
-.letra-pequena::before {
-  content: "LETRA PEQUEÑA";
-  display: block;
-  font: 600 11px / 1.4 var(--f-datos);
-  letter-spacing: var(--guiado);
-  color: var(--tinta-suave);
-  margin-bottom: 0.25em;
-}
 
 /* Sello de goma: CAÍDA / PROYECCIÓN */
 .sello {
