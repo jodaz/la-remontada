@@ -1,18 +1,22 @@
 name: Publicar
 
-# Compila con Playwright (og:image y capturas) y despliega a Cloudflare Pages.
-# Se ejecuta al hacer push a main, a mano, o cuando lo llama
-# "Recompilar a diario". El despliegue vive aquí y no en Cloudflare porque el
-# build de Pages no trae Chromium para las capturas de og:image.
+# Cloudflare Workers compila y despliega por su integración con Git. Este flujo
+# existe porque su build no trae Chromium: genera las og:image con Playwright,
+# las versiona en public/og/ y archiva las capturas de cada ejecución en MEGA S4.
+# Si las og:image cambian, el commit a main dispara el build de Cloudflare;
+# si no, llama al deploy hook para que igual se recompile (el meme cambia con
+# el mes). Se ejecuta con "Recompilar cada mes", a mano o al hacer push.
 
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "public/og/**"
   workflow_dispatch:
   workflow_call:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: publicar
@@ -20,12 +24,11 @@ concurrency:
 
 jobs:
   publicar:
-    name: Compilar y desplegar
+    name: Capturas, og:image y aviso a Cloudflare
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_DEPLOY_HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
       MEGA_S4_ENDPOINT: ${{ secrets.MEGA_S4_ENDPOINT }}
       MEGA_S4_BUCKET: ${{ secrets.MEGA_S4_BUCKET }}
       MEGA_S4_ACCESS_KEY_ID: ${{ secrets.MEGA_S4_ACCESS_KEY_ID }}
@@ -56,17 +59,19 @@ jobs:
       - name: Pruebas
         run: pnpm test
 
-      - name: Compilar (og:image, _headers y datos)
-        id: build
-        env:
-          # En producción deben existir las cinco rutas.
-          CAPTURAS_ESTRICTO: "1"
+      - name: Compilar (datos y _headers)
         run: pnpm build
 
       - name: Verificar la CSP en el build
         run: node scripts/headers.ts --verificar
 
-      - name: Archivar las capturas diarias en MEGA S4
+      - name: Generar og:image y capturas móviles
+        env:
+          # En producción deben existir las cinco rutas.
+          CAPTURAS_ESTRICTO: "1"
+        run: pnpm capturas:og
+
+      - name: Archivar las capturas móviles en MEGA S4
         if: env.MEGA_S4_BUCKET != ''
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.MEGA_S4_ACCESS_KEY_ID }}
@@ -79,7 +84,7 @@ jobs:
 
       - name: Avisar que falta configurar MEGA S4
         if: env.MEGA_S4_BUCKET == ''
-        run: echo "::warning::No hay secretos de MEGA S4. Las capturas diarias no se archivan."
+        run: echo "::warning::No hay secretos de MEGA S4. Las capturas móviles no se archivan."
 
       - name: Guardar las capturas como artefacto
         if: always()
@@ -90,5 +95,23 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Desplegar en Cloudflare Pages
-        run: npx --yes wrangler@4 pages deploy dist --project-name laremontada --branch main --commit-dirty=true
+      - name: Versionar las og:image si cambiaron
+        id: og
+        run: |
+          git add public/og
+          if git diff --cached --quiet; then
+            echo "cambio=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "og:image: actualización automática"
+            git push
+            echo "cambio=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Sin commit nuevo, Cloudflare no compilaría solo: lo avisamos.
+      - name: Recompilar en Cloudflare
+        if: steps.og.outputs.cambio == 'false'
+        run: |
+          test -n "$CF_DEPLOY_HOOK" || { echo "::error::Falta el secreto CF_DEPLOY_HOOK"; exit 1; }
+          curl -fsS -X POST "$CF_DEPLOY_HOOK"

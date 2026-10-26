@@ -214,18 +214,18 @@ En la sección de fuentes va una línea: "Estimación mensual a partir de las pr
 
 - El FMI publica dos veces al año, en abril y en octubre.
 - Un workflow de GitHub Actions (manual o programado para abril y octubre) descarga el archivo del FMI, lo valida (unos 190 países, Venezuela presente, sin saltos absurdos) y abre un Pull Request con un resumen: "Venezuela pasa del puesto X al Y; nueva próxima víctima: Z".
-- Al aprobar el Pull Request, Cloudflare Pages publica solo.
-- Un cron diario recompila el sitio, para que el meme cambie el día que cae un país.
+- Al aprobar el Pull Request, Cloudflare publica solo.
+- Un cron mensual (día 1) recompila el sitio, para que el meme cambie cuando cae un país. Las series son mensuales, así que el ranking no cambia entre dos meses.
 - El archivo crudo de cada edición del FMI se guarda en MEGA S4, para poder rehacer cualquier número.
 - El sitio muestra la edición que usa ("Datos: FMI, octubre 2026") debajo de cada gráfico.
 
 ## Requisitos técnicos
 
-Es un sitio estático en Cloudflare Pages: sin servidor propio, sin base de datos y sin cuentas.
+Es un sitio estático en Cloudflare Workers (assets estáticos): sin servidor propio, sin base de datos y sin cuentas.
 
 | Tema | Decisión |
 | --- | --- |
-| Hosting | Cloudflare Pages, conectado al repositorio de GitHub; cada cambio en la rama principal publica solo |
+| Hosting | Cloudflare Workers con assets estáticos (`wrangler.jsonc`), conectado al repositorio de GitHub; cada cambio en la rama principal publica solo. Un deploy hook, llamado por GitHub Actions, recompila sin necesidad de un commit |
 | Dominio | `laremontada.vanguarddevs.com` como dominio propio del proyecto de Pages (registro CNAME en la zona `vanguarddevs.com`) |
 | Framework | Astro en modo estático: cada ruta es una página HTML generada al compilar |
 | Rutas | `/` (meme al azar), `/victima`, `/ranking`, `/victima/numeros`, `/ranking/numeros` |
@@ -234,13 +234,13 @@ Es un sitio estático en Cloudflare Pages: sin servidor propio, sin base de dato
 | Descarga | `html-to-image` (`toPng`); respaldo con `canvas` |
 | Gráficos | Islas de Astro que cargan su JavaScript solo en las páginas de números |
 | Base de datos | Ninguna |
-| Automatización | GitHub Actions: datos del FMI con Pull Request, recompilación diaria, capturas con Playwright para la vista previa y prueba visual a ancho de celular |
-| Archivo | MEGA S4 guarda los datos crudos de cada edición del FMI y la captura diaria de cada meme. No sirve archivos al sitio |
+| Automatización | GitHub Actions: datos del FMI con Pull Request, recompilación mensual, capturas con Playwright para la vista previa y prueba visual a ancho de celular |
+| Archivo | MEGA S4 guarda los datos crudos de cada edición del FMI y la captura de cada meme en cada recompilación. No sirve archivos al sitio |
 | Fuentes | Google Fonts; la descarga espera a que carguen |
 | Analítica | Cloudflare Web Analytics por ruta; descargas con Cloudflare Zaraz si se decide contarlas |
-| Vista previa al compartir | `og:image` y `twitter:card` propias de cada ruta, con la captura de Playwright |
+| Vista previa al compartir | `og:image` y `twitter:card` propias de cada ruta, con la captura de Playwright. El build de Cloudflare no trae Chromium: las capturas se generan en GitHub Actions y se versionan en `public/og/` |
 | Encabezados | Archivo `_headers` con política de seguridad de contenido y caché larga para archivos versionados; caché corta para `data/` |
-| Secretos | Credenciales de MEGA S4 solo en los secretos de GitHub Actions, nunca en el repositorio |
+| Secretos | Credenciales de MEGA S4 y la URL del deploy hook (`CF_DEPLOY_HOOK`) solo en los secretos de GitHub Actions, nunca en el repositorio |
 
 **Rendimiento**
 
@@ -416,7 +416,7 @@ flowchart LR
     G2{{"Memes legibles<br/>en iPhone y Android"}}
     F3["3 · Números<br/>Contador y víctimas<br/>Carrera del ranking<br/>Total / por persona<br/>Fuentes y método"]
     G3{{"Gráficos<br/>verificados"}}
-    F4["4 · Lanzamiento<br/>Dominio en Pages<br/>Vista previa og:image<br/>Analítica<br/>Encabezados y caché"]
+    F4["4 · Lanzamiento<br/>Dominio en Workers<br/>Vista previa og:image<br/>Analítica<br/>Encabezados y caché"]
     G4{{"Preguntas<br/>cerradas"}}
     F1 --> G1 --> F2 --> G2 --> F3 --> G3 --> F4 --> G4
 ```
@@ -445,8 +445,9 @@ laremontada/
 ├── data/                          # pib.json, paises.json
 ├── public/memes/                  # puertas.jpg, escalera.jpg
 ├── memes/                         # puertas.json, escalera.json (posiciones)
+├── public/og/                     # og:image versionadas (las genera Actions)
 ├── scripts/                       # actualizar-fmi, capturas-og
-└── .github/workflows/             # datos-fmi.yml, recompilar-diario.yml
+└── .github/workflows/             # datos-fmi.yml, recompilar-mensual.yml
 ```
 
 ### Módulos de `src/lib`

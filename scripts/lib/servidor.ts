@@ -38,7 +38,7 @@ function escaparRegex(texto: string): string {
   return texto.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
 }
 
-/** Como Cloudflare Pages: las reglas que coinciden se suman; `!Cabecera` la quita. */
+/** Como los assets de Cloudflare: las reglas que coinciden se suman; `!Cabecera` la quita. */
 export function cabecerasPara(reglas: Regla[], ruta: string): Record<string, string> {
   const resultado: Record<string, string> = {};
   for (const regla of reglas) {

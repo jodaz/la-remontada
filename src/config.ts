@@ -28,7 +28,7 @@ export const SITIO = "laremontada.vanguarddevs.com";
 export const URL_SITIO = `https://${SITIO}`;
 
 /**
- * "Hoy" es la fecha de compilación (el sitio se recompila cada día).
+ * "Hoy" es la fecha de compilación (el sitio se recompila cada mes).
  * LA_REMONTADA_HOY=AAAA-MM-DD la fija para pruebas.
  */
 export function fechaDeCompilacion(): Date {
