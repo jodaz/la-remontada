@@ -1,0 +1,76 @@
+---
+import { modelo } from "../lib/datos.ts";
+import { dolaresCompletos, fechaEnPalabras } from "../lib/graficos.ts";
+import type { DatosContador } from "./tipos.ts";
+
+const contador = modelo.contador;
+const datos: DatosContador | null = contador
+  ? { ...contador, fecha: modelo.fecha, edicion: modelo.edicion }
+  : null;
+const referencia = contador ? dolaresCompletos(contador.v0) : null;
+const titulo = `El PIB de ${modelo.venezuela.pais.nombre}, en vivo`;
+---
+
+{
+  datos && referencia && (
+    <section class="contador-bloque" aria-labelledby="contador-titulo">
+      <h2 id="contador-titulo">{titulo}</h2>
+      <p class="contador-cifra contador" data-contador-cifra aria-hidden="true" aria-live="off">
+        {referencia}
+      </p>
+      <p class="contador-alternativa visualmente-oculto">
+        Cifra de referencia al compilar el sitio, el {fechaEnPalabras(modelo.fecha)}:{" "}
+        <span class="contador">{referencia}</span>. La cifra grande se actualiza cada segundo con
+        la estimación del FMI de {modelo.edicion}.
+      </p>
+
+      <script
+        type="application/json"
+        id="datos-contador"
+        is:inline
+        set:html={JSON.stringify(datos)}
+      ></script>
+      <script>
+        import { iniciarContador } from "./contador.ts";
+        iniciarContador();
+      </script>
+    </section>
+  )
+}
+
+<style is:global>
+  .contador-bloque {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--papel-2);
+    border: 1px solid var(--guilloche);
+    border-radius: var(--radio);
+  }
+  .contador-bloque h2 {
+    margin: 0;
+    font: 600 11px / 1.4 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .contador-cifra {
+    margin: 0.35rem 0 0.2rem;
+    font-size: clamp(1.35rem, 6.4vw, 2.25rem);
+    line-height: 1.1;
+    min-height: 1.1em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    color: var(--tinta);
+  }
+  .contador-alternativa {
+    margin: 0;
+    font-size: var(--t-14);
+    line-height: 1.45;
+    color: var(--tinta-suave);
+  }
+  .contador-alternativa .contador {
+    color: var(--tinta);
+  }
+</style>

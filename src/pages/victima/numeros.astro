@@ -1,0 +1,193 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import MemeMini from "../../components/MemeMini.astro";
+import Fuentes from "../../components/Fuentes.astro";
+import Contador from "../../islands/Contador.astro";
+import LineasCruce from "../../islands/LineasCruce.astro";
+import { modelo } from "../../lib/datos.ts";
+import { INICIO_VICTIMAS } from "../../config.ts";
+import { nombreMes } from "../../lib/meses.ts";
+
+const totalPaises = modelo.ranking.length;
+const totalPorPersona = modelo.venezuela.totalPorPersona;
+const proxima = modelo.proxima;
+const victimas = modelo.victimas;
+const descripcion = `El PIB de ${modelo.venezuela.pais.nombre} en vivo, las líneas que se cruzan con la próxima víctima y la lista de países que ha dejado atrás. Datos del FMI, ${modelo.edicion}.`;
+const explicacion1 = `En ${nombreMes(modelo.mesActual)}, ${modelo.venezuela.pais.nombre} está en el puesto ${modelo.venezuela.puesto} de ${totalPaises} países por PIB total; por PIB por persona, en el puesto ${modelo.venezuela.puestoPorPersona} de ${totalPorPersona}.`;
+const explicacion2 = `${proxima ? `La próxima víctima es ${proxima.pais.nombre}, en el puesto ${proxima.puesto}.` : `No hay ningún país por encima de ${modelo.venezuela.pais.nombre} en el ranking.`} Desde ${nombreMes(INICIO_VICTIMAS)} ${victimas.length === 1 ? `ha caído ${victimas.length} país` : `han caído ${victimas.length} países`} en el PIB total.`;
+---
+
+<Layout
+  titulo="Los números de las puertas · La Remontada"
+  descripcion={descripcion}
+  og="/og/victima-numeros.png"
+  ruta="/victima/numeros"
+>
+  <link slot="head" rel="preload" as="image" href="/memes/puertas.jpg" fetchpriority="high" />
+  <article class="numeros">
+    <header class="numeros-cabecera">
+      <p class="rotulo">Los números</p>
+      <h1>La muerte toca puertas</h1>
+      <p class="entradilla">
+        El PIB de {modelo.venezuela.pais.nombre} en vivo y los países que la remontada va dejando
+        atrás.
+      </p>
+      <MemeMini meme="puertas" ruta="/victima" alt="Meme de la muerte tocando puertas" />
+    </header>
+
+    <Contador />
+
+    <LineasCruce />
+
+    <section class="explicacion" aria-labelledby="explicacion-titulo">
+      <h2 id="explicacion-titulo">Qué muestran</h2>
+      <p>{explicacion1}</p>
+      <p>{explicacion2}</p>
+    </section>
+
+    <section class="victimas" aria-labelledby="victimas-titulo">
+      <h2 id="victimas-titulo">Las víctimas</h2>
+      {
+        victimas.length > 0 ? (
+          <ol class="victimas-lista">
+            {victimas.map((victima) => (
+              <li class="victima">
+                <span class="puerta" aria-hidden="true"></span>
+                <span class="victima-texto">
+                  <span class="victima-nombre">{victima.pais.nombre}</span>
+                  <span class="victima-detalle">
+                    Cayó en {victima.nombreMes} · puesto {victima.puesto} en{" "}
+                    {nombreMes(modelo.mesActual)}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="victimas-vacio">
+            Todavía no hay víctimas desde {nombreMes(INICIO_VICTIMAS)}:{" "}
+            {modelo.venezuela.pais.nombre} no ha pasado a ningún país en el PIB total.
+          </p>
+        )
+      }
+    </section>
+
+    <Fuentes />
+
+    <p class="volver">
+      <a class="boton-numeros" href="/victima">Volver al meme</a>
+    </p>
+  </article>
+</Layout>
+
+<style is:global>
+  .numeros {
+    width: 100%;
+  }
+  .numeros-cabecera h1 {
+    margin: 0.15rem 0 0.35rem;
+    font-size: clamp(2rem, 8vw, 2.5rem);
+  }
+  .numeros-cabecera .rotulo {
+    margin: 0;
+    font: 600 11px / 1.4 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .entradilla {
+    max-width: var(--ancho-texto);
+    margin: 0;
+    font-size: var(--t-16);
+    color: var(--tinta);
+  }
+  .explicacion {
+    margin: 1.5rem 0;
+  }
+  .explicacion h2 {
+    margin: 0 0 0.4rem;
+    font-size: var(--t-20);
+  }
+  .explicacion p {
+    max-width: var(--ancho-texto);
+    margin: 0 0 0.6rem;
+    font-size: var(--t-16);
+    line-height: 1.55;
+  }
+  .victimas {
+    margin: 1.5rem 0;
+  }
+  .victimas h2 {
+    margin: 0 0 0.6rem;
+    font-size: var(--t-20);
+  }
+  .victimas-lista {
+    display: grid;
+    gap: 0.6rem;
+    max-width: var(--ancho-texto);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .victima {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--papel-2);
+    border: 1px solid var(--guilloche);
+    border-radius: var(--radio);
+  }
+  .puerta {
+    position: relative;
+    flex: none;
+    width: 18px;
+    height: 26px;
+    border: 2px solid var(--rojo);
+    border-radius: 9px 9px 0 0;
+    background: var(--papel);
+  }
+  .puerta::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    top: 12px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--rojo);
+  }
+  .victima-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .victima-nombre {
+    font-weight: 700;
+    color: var(--tinta);
+  }
+  .victima-detalle {
+    font: 400 var(--t-12) / 1.4 var(--f-datos);
+    color: var(--tinta-suave);
+    overflow-wrap: anywhere;
+  }
+  .victimas-vacio {
+    max-width: var(--ancho-texto);
+    margin: 0;
+    font-size: var(--t-16);
+    color: var(--tinta);
+  }
+  .volver {
+    margin: 1.5rem 0 0;
+  }
+  .volver .boton-numeros {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .volver .boton-numeros::after {
+    content: "";
+  }
+</style>

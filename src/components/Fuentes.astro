@@ -1,0 +1,60 @@
+---
+import { modelo } from "../lib/datos.ts";
+import { fechaEnPalabras } from "../lib/graficos.ts";
+---
+
+<section id="fuentes" class="fuentes" aria-labelledby="fuentes-titulo">
+  <h2 id="fuentes-titulo">Fuentes y método</h2>
+  <ul>
+    <li>
+      <a href={modelo.fuenteUrl} rel="noopener">FMI, World Economic Outlook, {modelo.edicion}</a>.
+    </li>
+    <li>Compilado el {fechaEnPalabras(modelo.fecha)}.</li>
+    <li>
+      <a href="https://github.com/lipis/flag-icons" rel="noopener">flag-icons</a>, licencia MIT, para
+      las banderas.
+    </li>
+  </ul>
+  <p class="fuentes-metodo">
+    Estimación mensual a partir de las proyecciones anuales del FMI. No es un dato oficial mensual.
+  </p>
+  <p>
+    Este sitio usa solo datos del FMI; no usa cifras del BCV. La Remontada es un sitio de humor:
+    los números son reales; la euforia, no tanto.
+  </p>
+</section>
+
+<style is:global>
+  .fuentes {
+    margin: 2rem 0 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--guilloche);
+    scroll-margin-top: 1rem;
+  }
+  .fuentes h2 {
+    margin: 0 0 0.5rem;
+    font-size: var(--t-20);
+  }
+  .fuentes ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: var(--t-14);
+    line-height: 1.55;
+  }
+  .fuentes li + li {
+    margin-top: 0.25rem;
+  }
+  .fuentes-metodo {
+    margin: 0.75rem 0 0.5rem;
+    font-size: var(--t-14);
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--tinta);
+  }
+  .fuentes p:last-child {
+    margin: 0;
+    font-size: var(--t-14);
+    line-height: 1.5;
+    color: var(--tinta-suave);
+  }
+</style>

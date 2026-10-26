@@ -18,6 +18,13 @@
   --rojo: #C3302B;         /* sellos, aviso de caída */
   --barra: #A3ABB4;        /* barras y líneas de los demás países */
 
+  /* Texto sobre las imágenes del meme: igual en ambos temas */
+  --meme-texto: #FFFFFF;                 /* etiquetas en Anton */
+  --meme-borde: #000000;                 /* contorno y sombras */
+  --meme-sombra: rgb(0 0 0 / 55%);
+  --meme-sombra-fuerte: rgb(0 0 0 / 90%);
+  --marca-agua: rgb(255 255 255 / 85%);  /* dirección del sitio en la descarga */
+
   /* Tipografía */
   --f-titulo: "Big Shoulders Display", Impact, "Arial Narrow", sans-serif;
   --f-texto: "Atkinson Hyperlegible", system-ui, sans-serif;

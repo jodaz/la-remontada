@@ -1,0 +1,45 @@
+---
+// Descarga del meme en PNG. html-to-image se carga solo al pulsar el botón.
+interface Props {
+  meme: "puertas" | "escalera";
+}
+const { meme } = Astro.props;
+---
+
+<div class="descarga">
+  <button type="button" class="boton-descarga" data-descarga={meme}>Descargar meme</button>
+  <p class="aviso-descarga" data-aviso={meme} role="status" aria-live="polite"></p>
+</div>
+
+<script>
+  import "../scripts/descarga.ts";
+</script>
+
+<style>
+  .descarga {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .descarga .boton-descarga {
+    width: 100%;
+  }
+  @media (min-width: 480px) {
+    .descarga .boton-descarga {
+      width: auto;
+    }
+  }
+  .aviso-descarga {
+    margin: 0;
+    font-size: var(--t-14);
+    color: var(--rojo);
+  }
+  .aviso-descarga:empty {
+    display: none;
+  }
+  .boton-descarga[disabled] {
+    cursor: progress;
+    opacity: 0.7;
+  }
+</style>

@@ -1,0 +1,276 @@
+---
+import { modelo } from "../lib/datos.ts";
+import { milesDeMillones } from "../lib/formato.ts";
+import { nombreMes } from "../lib/meses.ts";
+import type { DatosLineas } from "./tipos.ts";
+
+const cruce = modelo.cruce;
+const rival = cruce ? modelo.paises[cruce.pais] : null;
+const venezuela = modelo.venezuela.pais;
+
+const datos: DatosLineas | null =
+  cruce && rival
+    ? {
+        pais: { iso: cruce.pais, iso2: rival.iso2, nombre: rival.nombre, corto: rival.corto },
+        meses: cruce.meses,
+        venezuela: cruce.venezuela,
+        rival: cruce.rival,
+        indiceActual: cruce.indiceActual,
+        cruce: cruce.cruce,
+        mensaje: cruce.mensaje,
+        venezuelaNombre: venezuela.nombre,
+      }
+    : null;
+---
+
+<section class="lineas" data-lineas aria-labelledby="lineas-titulo">
+  <div class="lineas-cabecera">
+    <div>
+      <h2 id="lineas-titulo">Las líneas que se cruzan</h2>
+      {rival && <p class="lineas-subtitulo">{venezuela.nombre} contra {rival.nombre}</p>}
+    </div>
+    {
+      cruce && cruce.meses.length - 1 > cruce.indiceActual && (
+        <p class="sello">PROYECCIÓN</p>
+      )
+    }
+  </div>
+
+  {
+    !datos || !cruce || !rival ? (
+      <p class="lineas-vacio">
+        No hay ningún país por encima de {venezuela.nombre} en el ranking, así que no hay
+        próxima víctima que mostrar.
+      </p>
+    ) : (
+      <>
+        <p class="lineas-mensaje">
+          {cruce.cruce && <span class="calavera" aria-hidden="true">☠</span>}
+          {cruce.mensaje}
+        </p>
+
+        <div class="lineas-tablero" data-lineas-tablero>
+          <svg
+            data-lineas-svg
+            role="img"
+            aria-labelledby="lineas-svg-titulo lineas-svg-desc"
+          >
+            <title id="lineas-svg-titulo">
+              {venezuela.nombre} y {rival.nombre}: líneas que se cruzan
+            </title>
+            <desc id="lineas-svg-desc">
+              {cruce.mensaje}. Evolución mensual del PIB estimado entre
+              {nombreMes(cruce.meses[0])} y {nombreMes(cruce.meses[cruce.meses.length - 1])}.
+            </desc>
+          </svg>
+        </div>
+
+        <ul class="leyenda" aria-label="Series del gráfico">
+          <li><span class="muestra muestra-ve" aria-hidden="true"></span>{venezuela.nombre}</li>
+          <li><span class="muestra muestra-rival" aria-hidden="true"></span>{rival.nombre}</li>
+        </ul>
+
+        <p class="linea-datos">{modelo.lineaDatos}</p>
+
+        <details class="lineas-detalle">
+          <summary>Ver los datos del gráfico</summary>
+          <div class="tabla-envoltura">
+            <table>
+              <caption>
+                PIB estimado, {nombreMes(cruce.meses[0])} a{" "}
+                {nombreMes(cruce.meses[cruce.meses.length - 1])}. {modelo.edicion}.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Mes</th>
+                  <th scope="col">{venezuela.nombre}</th>
+                  <th scope="col">{rival.nombre}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  cruce.meses.map((mes, i) => (
+                    <tr>
+                      <td>
+                        {nombreMes(mes)}
+                        {i > cruce.indiceActual ? " (proyección)" : ""}
+                      </td>
+                      <td>{milesDeMillones(cruce.venezuela[i])}</td>
+                      <td>{milesDeMillones(cruce.rival[i])}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <script
+          type="application/json"
+          id="datos-lineas"
+          is:inline
+          set:html={JSON.stringify(datos)}
+        ></script>
+        <script>
+          // Las líneas quedan debajo del pliegue; el módulo (con D3) se pide
+          // después de que la página haya pintado su contenido principal.
+          const arrancar = () => {
+            void import("./lineas.ts").then(({ iniciarLineas }) => iniciarLineas());
+          };
+          const cuandoLibre = () => {
+            const rIC = window.requestIdleCallback;
+            if (typeof rIC === "function") {
+              rIC(arrancar, { timeout: 1200 });
+            } else {
+              window.setTimeout(arrancar, 60);
+            }
+          };
+          if (document.readyState === "complete") cuandoLibre();
+          else window.addEventListener("load", cuandoLibre, { once: true });
+        </script>
+      </>
+    )
+  }
+</section>
+
+<style is:global>
+  .lineas {
+    margin: 2rem 0 1.5rem;
+  }
+  .lineas-cabecera {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .lineas-cabecera h2 {
+    margin: 0;
+    font-size: var(--t-28);
+  }
+  .lineas-subtitulo {
+    margin: 0.2rem 0 0;
+    font: 600 var(--t-12) / 1.3 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .lineas .sello {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.6em;
+    font-size: var(--t-14);
+  }
+  .lineas-mensaje {
+    margin: 0.9rem 0 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 4px solid var(--rojo);
+    font: 800 var(--t-20) / 1.2 var(--f-titulo);
+    color: var(--tinta);
+  }
+  .lineas-mensaje .calavera {
+    margin-right: 0.35em;
+    font-size: 1.1em;
+  }
+  .lineas-tablero {
+    position: relative;
+    width: 100%;
+    height: 240px;
+  }
+  @media (min-width: 640px) {
+    .lineas-tablero {
+      height: 340px;
+    }
+  }
+  .lineas-tablero svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--t-14);
+    color: var(--tinta);
+  }
+  .leyenda li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .muestra {
+    display: inline-block;
+    width: 20px;
+    height: 4px;
+    border-radius: 2px;
+  }
+  .muestra-ve {
+    background: var(--amarillo);
+  }
+  .muestra-rival {
+    background: var(--barra);
+  }
+  .lineas .linea-datos {
+    margin: 0.75rem 0 0;
+    font: 400 var(--t-12) / 1.4 var(--f-datos);
+    color: var(--tinta-suave);
+  }
+  .lineas-vacio {
+    margin: 1rem 0;
+    font-size: var(--t-16);
+  }
+  .lineas-detalle {
+    margin-top: 1rem;
+  }
+  .lineas-detalle summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font: 700 var(--t-14) / 1.3 var(--f-texto);
+    color: var(--azul);
+    cursor: pointer;
+  }
+  .lineas .tabla-envoltura {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .lineas table {
+    width: 100%;
+    min-width: 320px;
+    border-collapse: collapse;
+    background: var(--papel-2);
+    color: var(--tinta);
+    font-size: var(--t-14);
+  }
+  .lineas caption {
+    padding: 0.5rem 0.6rem;
+    text-align: left;
+    font: 600 11px / 1.4 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .lineas th,
+  .lineas td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--guilloche);
+    text-align: left;
+  }
+  .lineas th {
+    font: 600 11px / 1.3 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .lineas td:not(:first-child) {
+    font-family: var(--f-datos);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

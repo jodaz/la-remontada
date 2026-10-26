@@ -1,0 +1,86 @@
+name: Revisión
+
+# En cada Pull Request: pruebas, tipos, build, capturas en 360/400/768/1280
+# (claro y oscuro) y Lighthouse móvil. Falla si hay desborde horizontal a
+# 360 px, si una etiqueta se sale del meme, o si el rendimiento baja de 90 o
+# la accesibilidad de 95.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: revision-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  revision:
+    name: Pruebas, capturas y Lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Traer el repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Instalar Chromium para Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Pruebas unitarias
+        run: pnpm test
+
+      - name: Tipos
+        run: pnpm astro check
+
+      - name: Compilar
+        id: build
+        run: pnpm build
+
+      - name: Revisión visual
+        id: visual
+        run: pnpm revision
+
+      - name: Lighthouse móvil
+        id: lighthouse
+        if: always() && steps.build.outcome == 'success'
+        run: pnpm lighthouse
+
+      - name: Guardar capturas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-revision-${{ github.run_id }}
+          path: dist-capturas/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Exigir revisión visual y Lighthouse
+        if: always()
+        run: |
+          fallo=0
+          if [ "${{ steps.visual.outcome }}" = "failure" ]; then
+            echo "::error::La revisión visual falló (desborde o etiquetas fuera del meme)."
+            fallo=1
+          fi
+          if [ "${{ steps.lighthouse.outcome }}" = "failure" ]; then
+            echo "::error::Lighthouse quedó por debajo de 90 de rendimiento o 95 de accesibilidad."
+            fallo=1
+          fi
+          exit "$fallo"

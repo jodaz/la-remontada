@@ -7,11 +7,41 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/capturas-og.ts && node scripts/headers.ts",
+    "build:astro": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "check": "astro check",
+    "capturas": "node scripts/capturas-og.ts",
+    "headers": "node scripts/headers.ts",
+    "headers:verificar": "node scripts/headers.ts --verificar",
+    "revision": "node scripts/revision-visual.ts",
+    "lighthouse": "node scripts/lighthouse.ts",
+    "actualizar-fmi": "node scripts/actualizar-fmi.ts"
   },
   "dependencies": {
-    "astro": "^7.4.2"
+    "astro": "^7.4.2",
+    "d3-ease": "^3.0.1",
+    "d3-interpolate": "^3.0.1",
+    "d3-scale": "^4.0.2",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
+    "flag-icons": "^7.6.0",
+    "html-to-image": "^1.11.13"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@axe-core/playwright": "^4.14.0",
+    "@types/d3-ease": "^3.0.2",
+    "@types/d3-interpolate": "^3.0.4",
+    "@types/d3-scale": "^4.0.9",
+    "@types/d3-selection": "^3.0.12",
+    "@types/d3-transition": "^3.0.9",
+    "i18n-iso-countries": "^7.14.0",
+    "lighthouse": "^13.5.0",
+    "playwright": "^1.64.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
   }
 }

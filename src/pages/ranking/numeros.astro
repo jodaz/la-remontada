@@ -1,0 +1,100 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import MemeMini from "../../components/MemeMini.astro";
+import Fuentes from "../../components/Fuentes.astro";
+import CarreraRanking from "../../islands/CarreraRanking.astro";
+import { modelo } from "../../lib/datos.ts";
+import { INICIO_CARRERA } from "../../config.ts";
+import { nombreMes } from "../../lib/meses.ts";
+
+const totalPaises = modelo.ranking.length;
+const proxima = modelo.proxima;
+const finCarrera = modelo.carrera.meses[modelo.carrera.meses.length - 1] ?? modelo.mesActual;
+const descripcion = `Carrera del ranking del PIB: ${modelo.venezuela.pais.nombre} en el puesto ${modelo.venezuela.puesto} de ${totalPaises}. Datos del FMI, ${modelo.edicion}.`;
+const explicacion1 = `En ${nombreMes(modelo.mesActual)}, ${modelo.venezuela.pais.nombre} ocupa el puesto ${modelo.venezuela.puesto} de ${totalPaises} países por PIB total. La carrera recorre cada mes desde ${nombreMes(INICIO_CARRERA)} hasta ${nombreMes(finCarrera)}; los meses rayados son proyección del FMI.`;
+const explicacion2 = proxima
+  ? `La próxima víctima es ${proxima.pais.nombre}, en el puesto ${proxima.puesto}.`
+  : `No hay ningún país por encima de ${modelo.venezuela.pais.nombre} en el ranking.`;
+---
+
+<Layout
+  titulo="La carrera del ranking · La Remontada"
+  descripcion={descripcion}
+  og="/og/ranking-numeros.png"
+  ruta="/ranking/numeros"
+>
+  <link slot="head" rel="preload" as="image" href="/memes/escalera.jpg" fetchpriority="high" />
+  <article class="numeros">
+    <header class="numeros-cabecera">
+      <p class="rotulo">Los números</p>
+      <h1>La carrera del ranking</h1>
+      <p class="entradilla">
+        El puesto de {modelo.venezuela.pais.nombre} mes a mes, con los países que tiene justo
+        arriba y justo abajo.
+      </p>
+      <MemeMini meme="escalera" ruta="/ranking" alt="Meme de la escalera de medallas" />
+    </header>
+
+    <CarreraRanking />
+
+    <section class="explicacion" aria-labelledby="explicacion-titulo">
+      <h2 id="explicacion-titulo">Qué muestra</h2>
+      <p>{explicacion1}</p>
+      <p>{explicacion2}</p>
+    </section>
+
+    <Fuentes />
+
+    <p class="volver">
+      <a class="boton-numeros" href="/ranking">Volver al meme</a>
+    </p>
+  </article>
+</Layout>
+
+<style is:global>
+  .numeros {
+    width: 100%;
+  }
+  .numeros-cabecera h1 {
+    margin: 0.15rem 0 0.35rem;
+    font-size: clamp(2rem, 8vw, 2.5rem);
+  }
+  .numeros-cabecera .rotulo {
+    margin: 0;
+    font: 600 11px / 1.4 var(--f-datos);
+    letter-spacing: var(--guiado);
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+  .entradilla {
+    max-width: var(--ancho-texto);
+    margin: 0;
+    font-size: var(--t-16);
+    color: var(--tinta);
+  }
+  .explicacion {
+    margin: 1.5rem 0;
+  }
+  .explicacion h2 {
+    margin: 0 0 0.4rem;
+    font-size: var(--t-20);
+  }
+  .explicacion p {
+    max-width: var(--ancho-texto);
+    margin: 0 0 0.6rem;
+    font-size: var(--t-16);
+    line-height: 1.55;
+  }
+  .volver {
+    margin: 1.5rem 0 0;
+  }
+  .volver .boton-numeros {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .volver .boton-numeros::after {
+    content: "";
+  }
+</style>

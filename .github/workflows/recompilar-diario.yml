@@ -1,0 +1,20 @@
+name: Recompilar a diario
+
+# Reconstruye y publica todos los días a las 09:00 UTC (05:00 en Venezuela)
+# para que el meme cambie el día en que cae un país. Reutiliza "Publicar"
+# (compilación con Playwright + despliegue a Cloudflare Pages).
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/publicar.yml
+    secrets: inherit

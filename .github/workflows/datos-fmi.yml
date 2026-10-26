@@ -1,0 +1,113 @@
+name: Datos del FMI
+
+# Descarga el World Economic Outlook, valida los datos y abre un Pull Request.
+# Nunca publica: al aprobar el PR, "Publicar" reconstruye y despliega.
+#
+# Se ejecuta a mano o, en abril y octubre, todos los días del 5 al 25 a las
+# 13:17 UTC (el FMI publica a mediados de mes). Si no hay cambios, no hace nada.
+
+on:
+  workflow_dispatch:
+    inputs:
+      edicion:
+        description: 'Edición esperada, por ejemplo "octubre 2026" (opcional)'
+        required: false
+        type: string
+  schedule:
+    - cron: "17 13 5-25 4,10 *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: datos-fmi
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    name: Descargar, validar y abrir PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MEGA_S4_ENDPOINT: ${{ secrets.MEGA_S4_ENDPOINT }}
+      MEGA_S4_BUCKET: ${{ secrets.MEGA_S4_BUCKET }}
+      MEGA_S4_ACCESS_KEY_ID: ${{ secrets.MEGA_S4_ACCESS_KEY_ID }}
+      MEGA_S4_SECRET_ACCESS_KEY: ${{ secrets.MEGA_S4_SECRET_ACCESS_KEY }}
+      AWS_EC2_METADATA_DISABLED: "true"
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+    steps:
+      - name: Traer el repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Descargar y validar el FMI
+        env:
+          EDICION: ${{ inputs.edicion }}
+        run: |
+          args=(--crudos crudos --resumen resumen.md)
+          if [ -n "${EDICION:-}" ]; then args+=(--edicion "$EDICION"); fi
+          # Si la validación falla, el script sale con 1 y el job se detiene.
+          node scripts/actualizar-fmi.ts "${args[@]}"
+
+      - name: Pruebas
+        run: pnpm test
+
+      - name: Leer la edición descargada
+        id: edicion
+        run: |
+          id=$(node -p "require('./data/pib.json').edicionId")
+          nombre=$(node -p "require('./data/pib.json').edicion")
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+          echo "nombre=$nombre" >> "$GITHUB_OUTPUT"
+
+      - name: Archivar los crudos en MEGA S4
+        if: env.MEGA_S4_BUCKET != ''
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.MEGA_S4_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.MEGA_S4_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          aws s3 cp --recursive crudos/ "s3://$MEGA_S4_BUCKET/fmi/" \
+            --endpoint-url "$MEGA_S4_ENDPOINT" --only-show-errors
+
+      - name: Avisar que falta configurar MEGA S4
+        if: env.MEGA_S4_BUCKET == ''
+        run: echo "::warning::No hay secretos de MEGA S4. Los crudos quedan solo como artefacto."
+
+      - name: Guardar los crudos como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crudos-fmi-${{ steps.edicion.outputs.id || 'desconocida' }}
+          path: crudos/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Abrir Pull Request
+        if: steps.edicion.outputs.id != ''
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: datos-fmi/${{ steps.edicion.outputs.id }}
+          add-paths: data/pib.json
+          title: "Datos FMI: ${{ steps.edicion.outputs.nombre }}"
+          body-path: resumen.md
+          commit-message: "Datos FMI: ${{ steps.edicion.outputs.nombre }}"
+          delete-branch: true

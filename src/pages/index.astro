@@ -1,11 +1,61 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Meme from "../components/Meme.astro";
+import BotonDescarga from "../components/BotonDescarga.astro";
+import NotaRealidad from "../components/NotaRealidad.astro";
+import { memes, modelo } from "../lib/datos.ts";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Los dos memes van en el HTML; un script en el <head> elige uno antes del primer pintado.
+const MEMES = ["puertas", "escalera"] as const;
+const notas = { puertas: modelo.notas.puertas, escalera: modelo.notas.escalera };
 ---
 
-<Layout>
-	<Welcome />
+<Layout titulo="La Remontada" descripcion={modelo.lema} og="/og/inicio.png" ruta="/">
+  <Fragment slot="head">
+    {/* El script async no espera al CSS que bloquea el render: elige el meme y
+        precarga su imagen (el LCP) cuanto antes. El script en línea corre justo
+        antes del primer pintado y garantiza que nunca se vea el meme equivocado,
+        aunque el archivo async no llegue a cargar. Los dos son idempotentes. */}
+    <script is:inline async src="/elegir-meme.js"></script>
+    <script is:inline>
+      const raiz = document.documentElement;
+      if (!raiz.dataset.meme) {
+        raiz.dataset.meme = Math.random() < 0.5 ? "puertas" : "escalera";
+      }
+      if (!document.querySelector('link[rel="preload"][as="image"]')) {
+        const imagen = document.createElement("link");
+        imagen.rel = "preload";
+        imagen.as = "image";
+        imagen.href = `/memes/${raiz.dataset.meme}.jpg`;
+        imagen.setAttribute("fetchpriority", "high");
+        document.head.append(imagen);
+      }
+    </script>
+  </Fragment>
+
+  {
+    MEMES.map((meme) => (
+      <section class="pantalla-meme" data-pantalla={meme}>
+        <Meme meme={meme} carga="diferida" />
+        <BotonDescarga meme={meme} />
+        <NotaRealidad texto={notas[meme]} />
+        <a class="boton-numeros" href={`${memes[meme].ruta}/numeros`}>
+          Ver los números
+        </a>
+      </section>
+    ))
+  }
 </Layout>
+
+<style>
+  /* Sin JS se ve el meme de las puertas; con JS manda el atributo del <html>. */
+  .pantalla-meme[data-pantalla="escalera"] {
+    display: none;
+  }
+  :global(html[data-meme="escalera"]) .pantalla-meme[data-pantalla="escalera"] {
+    display: flex;
+  }
+  :global(html[data-meme="escalera"]) .pantalla-meme[data-pantalla="puertas"] {
+    display: none;
+  }
+</style>
